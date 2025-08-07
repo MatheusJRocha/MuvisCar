@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - MuvisCar</title>
+    
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
+    <!-- Flatpickr for Date Picker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Personalizado -->
+    <link rel="stylesheet" href="static/css/relatorio.css">
+<style>
+/* Estilos do tema escuro - VERSÃO MAIS CLARA E TRANSPARENTE */
+body.dark {
+    background-color: #082338; /* Fundo principal: um cinza escuro mais claro */
+    color:  #082338; /* Cor do texto principal: um branco suave */
+}
+.dark .glass-effect {
+    background:  #082338(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px); 
+    border: 1px solid  #082338(255, 255, 255, 0.15);
+    color:  #082338;
+}
+.dark .text-gray-800 { color: #f0f0f0; } 
+.dark .text-gray-700 { color: #e0e0e0; }
+.dark .text-gray-600 { color: #a0a0a0; }
+.dark .bg-gray-100 { background-color:  #082338; } /* Fundo de elementos: cinza mais claro */
+.dark .hover\:bg-gray-200:hover { background-color:  #082338; }
+.dark .border-gray-200 { border-color:  #082338; }
+.dark .bg-white { background-color:  #082338; } /* Fundo de elementos brancos: cinza escuro mais claro */
+.dark .hover\:bg-gray-100:hover { background-color:  #082338; }
+
+/* Estilo para os cards de carro e filtro - AGORA TRANSPARENTE E UNIFICADO */
+.dark .car-card,
+.dark .filter-card {
+    background: rgba(255, 255, 255, 0.08); /* Fundo semi-transparente para ambos */
+    backdrop-filter: blur(12px); /* Efeito de vidro borrado */
+    border: 1px solid rgba(255, 255, 255, 0.15); 
+}
+.dark .car-card .shadow-lg {
+    box-shadow: 0 4px 8px rgba(34, 34, 34, 0.185); 
+}
+.dark .car-card .hover\:shadow-2xl:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.185);
+}
+
+/* Estilo para o card de filtro no tema escuro - Sombras */
+.dark .filter-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.185);
+}
+.dark .search-input,
+.dark .filter-card select {
+    background-color: #333333; /* Fundo do input e select mais claro */
+    color: #f0f0f0;
+    border-color: #555555;
+}
+.dark .search-input::placeholder {
+    color: #a0a0a0;
+}
+.dark .bg-gray-600 {
+    background-color: #555555;
+}
+.dark .bg-gray-600:hover {
+    background-color: #666666;
+}
+</style>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg logo-animation">
+                        <i class="fas fa-car text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">MuvisCar</h1>
+                        <p class="text-sm text-gray-600">Sistema de Locação</p>
+                    </div>
+                </div>
+
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-home mr-2"></i>Início
+                    </a>
+                    <a href="/carros" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-car mr-2"></i>Carros
+                    </a>
+                    <a href="/clientes" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-users mr-2"></i>Clientes
+                    </a>
+                    <a href="/locacoes" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2 active">
+                        <i class="fas fa-clipboard-list mr-2"></i>Locações
+                    </a>
+                </nav>
+
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-3">
+                        <div class="relative">
+                            <!-- <button class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 rounded-lg px-3 py-2 transition duration-300">
+                                <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-white text-sm"></i>
+                                </div>
+                                <span class="text-gray-700 font-medium">Admin</span>
+                                <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+                            </button> -->
+                        </div>
+                    </div>
+
+                    <button id="mobileMenuBtn" class="md:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="backdrop" class="backdrop fixed inset-0 z-40 md:hidden"></div>
+
+    <div id="mobileMenu" class="mobile-menu fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 md:hidden">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+                        <i class="fas fa-car text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800">MuvisCar</h2>
+                        <p class="text-sm text-gray-600">Sistema de Locação</p>
+                    </div>
+                </div>
+                <button id="closeMobileMenu" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <nav class="space-y-4">
+                <a href="/" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-home text-lg"></i>
+                    <span class="font-medium">Início</span>
+                </a>
+                <a href="/carros" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-car text-lg"></i>
+                    <span class="font-medium">Carros</span>
+                </a>
+                <a href="/clientes" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-users text-lg"></i>
+                    <span class="font-medium">Clientes</span>
+                </a>
+                <a href="/locacoes" class="flex items-center space-x-3 text-blue-600 bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-clipboard-list text-lg"></i>
+                    <span class="font-medium">Locações</span>
+                </a>
+            </nav>
+
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                <div class="flex items-center space-x-3 bg-gray-50 rounded-lg p-4">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-800">Admin</p>
+                        <p class="text-sm text-gray-600">admin@MuvisCar.com</p>
+                    </div>
+                </div>
+                <button class="w-full mt-4 text-red-600 hover:bg-red-50 rounded-lg px-4 py-2 text-left transition duration-300">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Sair
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <main class="pt-20 min-h-screen">
+        <div id="content-area" class="container mx-auto px-4 py-8">
+
+            <nav class="mb-6">
+                <ol class="flex items-center space-x-2 text-sm text-gray-600">
+                    <li><a href="/" class="hover:text-blue-600 transition duration-300">Início</a></li>
+                    <li><i class="fas fa-chevron-right text-xs"></i></li>
+                    <li class="text-gray-800 font-medium">Relatórios</li>
+                </ol>
+            </nav>
+
+            <div class="container mx-auto px-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-xl card-shadow">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm font-medium">Locações Ativas</p>
+                                <p id="activeRentals" class="text-3xl font-bold text-blue-600">0</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <i class="fas fa-file-contract text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl card-shadow">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm font-medium">Receita Mensal</p>
+                                <p id="monthlyRevenue" class="text-3xl font-bold text-green-600">R$ 0,00</p>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl card-shadow">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm font-medium">Devoluções Hoje</p>
+                                <p id="returnsToday" class="text-3xl font-bold text-orange-600">0</p>
+                            </div>
+                            <div class="bg-orange-100 p-3 rounded-full">
+                                <i class="fas fa-undo text-orange-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl card-shadow">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm font-medium">Em Atraso</p>
+                                <p id="overdueRentals" class="text-3xl font-bold text-red-600">0</p>
+                            </div>
+                            <div class="bg-red-100 p-3 rounded-full">
+                                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-6 mb-6">
+                <div class="bg-white p-6 rounded-xl card-shadow">
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+                        <h2 class="text-2xl font-bold text-gray-800">
+                            <i class="fas fa-file-contract text-blue-600 mr-2"></i>
+                            Relatórios de Locações
+                        </h2>
+
+                        <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                            <input type="text" id="searchInput" placeholder="Buscar por cliente, placa..."
+                                   class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+
+                            <select id="statusFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Todos os Status</option>
+                                <option value="ativa">Ativa</option>
+                                <option value="finalizada">Finalizada</option>
+                                <option value="atrasada">Atrasada</option>
+                                <option value="pendente">Pendente</option>
+                            </select>
+
+                            <button id="newRentalBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition duration-300">
+                                <i class="fas fa-plus mr-2"></i>Nova Locação
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="rentalModal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden items-center justify-center z-50">
+                <div class="bg-white p-8 rounded-xl max-w-4xl w-full mx-4 max-h-screen overflow-y-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 id="modalTitle" class="text-2xl font-bold text-gray-800">Nova Locação</h3>
+                        <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+
+                    <form id="rentalForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <input type="hidden" id="rentalId">
+
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Cliente:</label>
+                            <select id="clientSelect" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Carregando clientes...</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Carro:</label>
+                            <select id="carSelect" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Carregando carros...</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Data de Início:</label>
+                            <input type="text" id="startDate" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Data de Fim:</label>
+                            <input type="text" id="endDate" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Diária (R$):</label>
+                            <input type="number" id="dailyRate" step="0.01" readonly class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Total de Dias:</label>
+                            <input type="number" id="totalDays" readonly class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Valor Total (R$):</label>
+                            <input type="number" id="totalValue" step="0.01" readonly class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Seguro:</label>
+                            <select id="insurance" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="0">Sem seguro</option>
+                                <option value="15">Básico (+R$ 15/dia)</option>
+                                <option value="25">Completo (+R$ 25/dia)</option>
+                            </select>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Observações:</label>
+                            <textarea id="observations" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Observações adicionais..."></textarea>
+                        </div>
+
+                        <div class="md:col-span-2 flex justify-end space-x-4 mt-6">
+                            <button type="button" id="cancelBtn" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition duration-300">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition duration-300">
+                                Salvar Locação
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-6 mb-8">
+                <div class="bg-white rounded-xl card-shadow overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Carro</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Período</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valor Total</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rentalsTableBody" class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td colspan="7" class="text-center py-8 text-gray-500">
+                                        <div class="loading-spinner"></div>
+                                        Carregando locações...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="returnModal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden items-center justify-center z-50">
+                <div class="bg-white p-8 rounded-xl max-w-2xl w-full mx-4">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800">Devolução de Veículo</h3>
+                        <button id="closeReturnModalBtn" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+
+                    <form id="returnForm">
+                        <input type="hidden" id="returnRentalId">
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Data de Devolução:</label>
+                                <input type="text" id="returnDate" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Quilometragem Final:</label>
+                                <input type="number" id="finalMileage" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Combustível (%):</label>
+                                <select id="fuelLevel" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="100">Cheio (100%)</option>
+                                    <option value="75">3/4 (75%)</option>
+                                    <option value="50">1/2 (50%)</option>
+                                    <option value="25">1/4 (25%)</option>
+                                    <option value="0">Vazio (0%)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Multa por Atraso (R$):</label>
+                                <input type="number" id="lateFee" step="0.01" value="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Observações da Devolução:</label>
+                                <textarea id="returnNotes" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Estado do veículo, danos, etc..."></textarea>
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-bold text-gray-800 mb-2">Resumo da Devolução:</h4>
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex justify-between">
+                                            <span>Valor Original:</span>
+                                            <span id="originalAmount">R$ 0,00</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Multa por Atraso:</span>
+                                            <span id="lateAmount">R$ 0,00</span>
+                                        </div>
+                                        <div class="flex justify-between font-bold">
+                                            <span>Total Final:</span>
+                                            <span id="finalAmount">R$ 0,00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-4 mt-6">
+                            <button type="button" id="cancelReturnBtn" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition duration-300">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition duration-300">
+                                Confirmar Devolução
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-6">
+                <div class="bg-white p-6 rounded-xl card-shadow">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                        <i class="fas fa-chart-bar text-green-600 mr-2"></i>
+                        Relatórios e Estatísticas
+                    </h2>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Receita Mensal</h3>
+                            <div class="chart-container">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Status das Locações</h3>
+                            <div class="chart-container">
+                                <canvas id="statusChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-4 py-12">
+            <div class="grid md:grid-cols-4 gap-8">
+
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+                            <i class="fas fa-car text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">MuvisCar</h3>
+                            <p class="text-gray-400 text-sm">Sistema de Locação de Veículos</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Sua solução completa para gestão de locadora de veículos.
+                        Gerencie carros, clientes e locações de forma simples e eficiente.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition duration-300">
+                            <i class="fab fa-facebook-f text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition duration-300">
+                            <i class="fab fa-twitter text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition duration-300">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition duration-300">
+                            <i class="fab fa-linkedin-in text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Links Rápidos</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/" class="text-gray-400 hover:text-white transition duration-300">Início</a></li>
+                        <li><a href="/carros" class="text-gray-400 hover:text-white transition duration-300">Carros</a></li>
+                        <li><a href="/clientes" class="text-gray-400 hover:text-white transition duration-300">Clientes</a></li>
+                        <li><a href="/locacoes" class="text-gray-400 hover:text-white transition duration-300">Locações</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Política de Privacidade</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contato</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Rua Exemplo, 123, Cidade - UF</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-phone"></i>
+                            <span>(XX) XXXX-XXXX</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-envelope"></i>
+                            <span>contato@MuvisCar.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center text-gray-500 text-sm mt-8 pt-8 border-t border-gray-700">
+                &copy; 2024 MuvisCar. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Container para Notificações -->
+    <div id="notificationContainer" class="fixed top-4 right-4 z-50 space-y-4"></div>
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/pt.js"></script>
+    
+    <!-- JavaScript Personalizado -->
+    <script src="static/js/relatorio.js"></script>
+</body>
+</html>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('themeToggle');
+            const sunIcon = document.getElementById('sunIcon');
+            const moonIcon = document.getElementById('moonIcon');
+            const body = document.body;
+
+            // Função para aplicar o tema
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    body.classList.add('dark');
+                    sunIcon.classList.remove('hidden');
+                    moonIcon.classList.add('hidden');
+                } else {
+                    body.classList.remove('dark');
+                    sunIcon.classList.add('hidden');
+                    moonIcon.classList.remove('hidden');
+                }
+            }
+
+            // Checar o tema salvo no localStorage ou preferência do sistema
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                // Se não houver tema salvo, usar a preferência do sistema
+                applyTheme('dark');
+            } else {
+                applyTheme('light');
+            }
+
+            // Adicionar evento de clique para alternar o tema
+            themeToggleBtn.addEventListener('click', () => {
+                if (body.classList.contains('dark')) {
+                    applyTheme('light');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    applyTheme('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

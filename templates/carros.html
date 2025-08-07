@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MuvisCar - Sistema Integrado</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/carros.css">
+<style>
+/* Estilos do tema escuro - VERSÃO MAIS CLARA E TRANSPARENTE */
+body.dark {
+    background-color: #082338; /* Fundo principal: um cinza escuro mais claro */
+    color:  #082338; /* Cor do texto principal: um branco suave */
+}
+.dark .glass-effect {
+    background:  #082338(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px); 
+    border: 1px solid  #082338(255, 255, 255, 0.15);
+    color:  #082338;
+}
+.dark .text-gray-800 { color: #f0f0f0; } 
+.dark .text-gray-700 { color: #e0e0e0; }
+.dark .text-gray-600 { color: #a0a0a0; }
+.dark .bg-gray-100 { background-color:  #082338; } /* Fundo de elementos: cinza mais claro */
+.dark .hover\:bg-gray-200:hover { background-color:  #082338; }
+.dark .border-gray-200 { border-color:  #082338; }
+.dark .bg-white { background-color:  #082338; } /* Fundo de elementos brancos: cinza escuro mais claro */
+.dark .hover\:bg-gray-100:hover { background-color:  #082338; }
+
+/* Estilo para os cards de carro e filtro - AGORA TRANSPARENTE E UNIFICADO */
+.dark .car-card,
+.dark .filter-card {
+    background: rgba(255, 255, 255, 0.08); /* Fundo semi-transparente para ambos */
+    backdrop-filter: blur(12px); /* Efeito de vidro borrado */
+    border: 1px solid rgba(255, 255, 255, 0.15); 
+}
+.dark .car-card .shadow-lg {
+    box-shadow: 0 4px 8px rgba(34, 34, 34, 0.185); 
+}
+.dark .car-card .hover\:shadow-2xl:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.185);
+}
+
+/* Estilo para o card de filtro no tema escuro - Sombras */
+.dark .filter-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.185);
+}
+.dark .search-input,
+.dark .filter-card select {
+    background-color: #333333; /* Fundo do input e select mais claro */
+    color: #f0f0f0;
+    border-color: #555555;
+}
+.dark .search-input::placeholder {
+    color: #a0a0a0;
+}
+.dark .bg-gray-600 {
+    background-color: #555555;
+}
+.dark .bg-gray-600:hover {
+    background-color: #666666;
+}
+</style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg logo-animation">
+                        <i class="fas fa-car text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">MuvisCar</h1>
+                        <p class="text-sm text-gray-600">Sistema de Locação</p>
+                    </div>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="/home" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-home mr-2"></i>Início
+                    </a>
+                    <a href="/carros" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-car text-lg"></i>
+                    <span class="font-medium">Carros</span>
+                </a>
+                    <a href="/clientes" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-users mr-2"></i>Clientes
+                    </a>
+                    <a href="/locacoes" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-clipboard-list mr-2"></i>Locações
+                    </a>
+                </nav>
+                <button id="themeToggle" class="p-2 rounded-lg transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+                        <i id="sunIcon" class="fas fa-sun text-gray-500 dark:text-yellow-400 hidden"></i>
+                        <i id="moonIcon" class="fas fa-moon text-gray-500 dark:text-gray-400"></i>
+                    </button>
+                <!-- User Profile & Mobile Menu Button -->
+                <div class="flex items-center space-x-4">
+                    <!-- User Profile (Desktop) -->
+                    <div class="hidden md:flex items-center space-x-3">
+                        <div class="relative">
+                            <!-- <button class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 rounded-lg px-3 py-2 transition duration-300">
+                                <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-white text-sm"></i>
+                                </div>
+                                <span class="text-gray-700 font-medium">Admin</span>
+                                <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+                            </button> -->
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="md:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu -->
+    <div id="backdrop" class="backdrop fixed inset-0 z-40 md:hidden"></div>
+    <div id="mobileMenu" class="mobile-menu fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 md:hidden">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+                        <i class="fas fa-car text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800">MuvisCar</h2>
+                        <p class="text-sm text-gray-600">Sistema Integrado</p>
+                    </div>
+                </div>
+                <button id="closeMobileMenu" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="/home" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-home mr-2"></i>Início
+                    </a>
+                    <a href="/carros" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2 active">
+                        <i class="fas fa-car mr-2"></i>Carros
+                    </a>
+                    <a href="/clientes" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-users mr-2"></i>Clientes
+                    </a>
+                    <a href="/locacoes" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-clipboard-list mr-2"></i>Locações
+                    </a>
+                </nav>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="pt-20 min-h-screen">
+        <div class="container mx-auto px-4 py-8">
+            
+            <!-- Breadcrumb -->
+            <nav class="mb-6">
+                <ol class="flex items-center space-x-2 text-sm text-gray-600">
+                    <li><a href="#dashboard" class="hover:text-blue-600 transition duration-300">Dashboard</a></li>
+                    <li><i class="fas fa-chevron-right text-xs"></i></li>
+                    <li class="text-gray-800 font-medium">Gestão de Carros</li>
+                </ol>
+            </nav>
+
+            <!-- Page Header -->
+            <div class="mb-8">
+                <h2 class="text-4xl font-bold text-gray-800 mb-2">
+                    <i class="fas fa-car text-blue-600 mr-3"></i>
+                    Gestão de Carros
+                </h2>
+                <p class="text-gray-600">Gerencie sua frota de veículos com integração completa ao backend</p>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <div class="flex flex-col space-y-6">
+                    
+                    <!-- Search and Status Filter Row -->
+                    <div class="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0 lg:space-x-4">
+                        <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 flex-1">
+                            <div class="relative flex-1 max-w-md">
+                                <input type="text" id="searchInput"
+                                        placeholder="Buscar por marca, modelo ou placa..."
+                                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            </div>
+                            <select id="statusFilter" class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Todos os Status</option>
+                                <option value="DISPONIVEL">Disponível</option>
+                                <option value="ALUGADO">Alugado</option>
+                                <option value="EM_MANUTENCAO">Manutenção</option>
+                                <option value="INATIVO">Inativo</option>
+                                
+                            </select>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <button id="refreshBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition duration-300 flex items-center space-x-2">
+                                <i class="fas fa-sync-alt"></i>
+                                <span>Atualizar</span>
+                            </button>
+                            <button id="addCarBtn" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-lg transition duration-300 flex items-center space-x-2 shadow-lg">
+                                <i class="fas fa-plus"></i>
+                                <span>Adicionar Carro</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Filters Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-industry text-blue-500 mr-1"></i>
+                                Marca
+                            </label>
+                            <select id="brandFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Todas as marcas</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-tags text-blue-500 mr-1"></i>
+                                Categoria
+                            </label>
+                            <select id="categoryFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Todas as categorias</option>
+                                <option value="ECONOMICO">Econômico</option>
+                                <option value="INTERMEDIARIO">Intermediário</option>
+                                <option value="LUXO">Luxo</option>
+                                <option value="SUV">SUV</option>
+                                <option value="ESPORTIVO">Esportivo</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-dollar-sign text-blue-500 mr-1"></i>
+                                Faixa de Preço: R$ <span id="priceRangeValue">0 - 1000</span>
+                            </label>
+                            <div class="flex items-center space-x-2">
+                                <input type="range" id="priceRangeMin" min="0" max="1000" value="0" class="price-range-slider flex-1">
+                                <input type="range" id="priceRangeMax" min="0" max="1000" value="1000" class="price-range-slider flex-1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Car Form Modal -->
+            <div id="carFormModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+                <div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-screen overflow-y-auto">
+                    <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-xl">
+                        <div class="flex items-center justify-between">
+                            <h3 id="formTitle" class="text-2xl font-bold text-gray-800">
+                                <i class="fas fa-car text-blue-600 mr-2"></i>
+                                Adicionar Carro
+                            </h3>
+                            <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700 text-2xl">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <form id="carForm" class="p-6">
+                        <input type="hidden" id="originalPlate">
+                        <input type="hidden" id="editMode">
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <!-- Left Column -->
+                            <div class="space-y-4">
+                                <h4 class="text-lg font-semibold text-gray-700 border-b pb-2 flex items-center">
+                                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                                    Informações Básicas
+                                </h4>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">
+                                            <i class="fas fa-industry text-blue-500 mr-1"></i>
+                                            Marca <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="text" id="brand" name="brand" required
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="Ex: Toyota, Honda, Ford">
+                                        <div id="brandError" class="text-red-500 text-sm mt-1 hidden"></div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label for="model" class="block text-sm font-medium text-gray-700 mb-2">
+                                            <i class="fas fa-car text-blue-500 mr-1"></i>
+                                            Modelo <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="text" id="model" name="model" required
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="Ex: Corolla, Civic, Focus">
+                                        <div id="modelError" class="text-red-500 text-sm mt-1 hidden"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="year" class="block text-sm font-medium text-gray-700 mb-2">
+                                            <i class="fas fa-calendar text-blue-500 mr-1"></i>
+                                            Ano <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="number" id="year" name="year" required min="1990" max="2030"
+                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                 placeholder="2024">
+                                        <div id="yearError" class="text-red-500 text-sm mt-1 hidden"></div>
+                                    </div>
+                                    <div>
+                                        <label for="mileage" class="block text-sm font-medium text-gray-700 mb-2">
+                                            <i class="fas fa-tachometer-alt text-blue-500 mr-1"></i>
+                                            Quilometragem <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="number" id="mileage" name="mileage" required min="0"
+                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                 placeholder="50000">
+                                        <div id="mileageError" class="text-red-500 text-sm mt-1 hidden"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="color" class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-palette text-blue-500 mr-1"></i>
+                                        Cor <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="color" name="color" required
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="Ex: Preto, Branco, Prata">
+                                    <div id="colorError" class="text-red-500 text-sm mt-1 hidden"></div>
+                                </div>
+
+                                <div>
+                                    <label for="licensePlate" class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-id-card text-blue-500 mr-1"></i>
+                                        Placa <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="licensePlate" name="licensePlate" required
+                                            pattern="[A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9]{1}[A-Z]{1}[0-9]{2}"
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="ABC1234 ou ABC1D23"
+                                            maxlength="8">
+                                    <div id="licensePlateError" class="text-red-500 text-sm mt-1 hidden"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Right Column -->
+                            <div class="space-y-4">
+                                <h4 class="text-lg font-semibold text-gray-700 border-b pb-2 flex items-center">
+                                    <i class="fas fa-dollar-sign text-blue-500 mr-2"></i>
+                                    Informações Comerciais
+                                </h4>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="carCategory" class="block text-sm font-medium text-gray-700 mb-2">
+                                            <i class="fas fa-list-alt text-blue-500 mr-1"></i>
+                                            Categoria <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="carCategory" name="category" required
+                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                     <option value="">Selecione a Categoria</option>
+                                                     <option value="ECONOMICO">Econômico</option>
+                                                     <option value="INTERMEDIARIO">Intermediário</option>
+                                                     <option value="LUXO">Luxo</option>
+                                                     <option value="SUV">SUV</option>
+                                                     <option value="ESPORTIVO">Esportivo</option>
+                                         </select>
+                                        <div id="categoryError" class="text-red-500 text-sm mt-1 hidden"></div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label for="dailyRate" class="block text-sm font-medium text-gray-700 mb-2">
+                                            <i class="fas fa-dollar-sign text-blue-500 mr-1"></i>
+                                            Diária (R$) <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="number" id="dailyRate" name="dailyRate" required step="0.01" min="0"
+                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                 placeholder="120.50">
+                                        <div id="dailyRateError" class="text-red-500 text-sm mt-1 hidden"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-info-circle text-blue-500 mr-1"></i>
+                                        Status <span class="text-red-500">*</span>
+                                    </label>
+                                    <select id="status" name="status" required
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <option value="DISPONIVEL">Disponível</option>
+                                        <option value="ALUGADO">Alugado</option>
+                                        <option value="EM_MANUTENCAO">Em Manutenção</option>
+                                        <option value="INATIVO">Inativo</option>
+                                    </select>
+                                    <div id="statusError" class="text-red-500 text-sm mt-1 hidden"></div>
+                                </div>
+                                
+                                <div>
+                                    <label for="features" class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-cogs text-blue-500 mr-1"></i>
+                                        Recursos (separados por vírgula)
+                                    </label>
+                                    <textarea id="features" name="features" rows="3"
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="Ex: Ar-condicionado, GPS, Câmera de ré, Direção hidráulica"></textarea>
+                                </div>
+
+                                <div>
+                                    <label for="imageUrls" class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-images text-blue-500 mr-1"></i>
+                                        URLs das Imagens (uma por linha)
+                                    </label>
+                                    <textarea id="imageUrls" name="imageUrls" rows="4"
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="https://example.com/car1.jpg&#10;https://example.com/car2.jpg"></textarea>
+                                    <div id="imagePreview" class="mt-3 hidden">
+                                        <div class="image-gallery"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-4 mt-8 pt-6 border-t border-gray-200">
+                            <button type="button" id="cancelFormBtn" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-300">
+                                <i class="fas fa-times mr-2"></i>
+                                Cancelar
+                            </button>
+                            <button type="submit" id="submitBtn" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-3 rounded-lg transition duration-300 shadow-lg flex items-center">
+                                <div class="loading-spinner hidden mr-2"></div>
+                                <i class="fas fa-save mr-2"></i>
+                                <span id="submitBtnText">Salvar Carro</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Cars Table -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-semibold text-gray-800">
+                            <i class="fas fa-list text-blue-600 mr-2"></i>
+                            Lista de Carros
+                        </h3>
+                        <div class="flex items-center space-x-4">
+                            <span id="carCount" class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                0 Carros Encontrados
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Imagem
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Marca/Modelo
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Placa
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Ano/Km
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Categoria/Diária
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Ações
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="carsTableBody" class="bg-white divide-y divide-gray-200">
+                            <!-- Carros serão carregados aqui via JavaScript -->
+                            <tr>
+                                <td colspan="7" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+                                    <div id="loadingMessage" class="flex items-center justify-center text-blue-600 font-medium">
+                                        <div class="loading-spinner mr-3"></div>
+                                        Carregando carros...
+                                    </div>
+                                    <div id="noCarsMessage" class="hidden text-gray-500">Nenhum carro encontrado.</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- Container para Notificações -->
+    <div id="notificationContainer" class="fixed top-4 right-4 z-50 space-y-4"></div>
+
+    <!-- JavaScript Personalizado -->
+    <script src="static/js/carros.js"></script>
+    
+ <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('themeToggle');
+            const sunIcon = document.getElementById('sunIcon');
+            const moonIcon = document.getElementById('moonIcon');
+            const body = document.body;
+
+            // Função para aplicar o tema
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    body.classList.add('dark');
+                    sunIcon.classList.remove('hidden');
+                    moonIcon.classList.add('hidden');
+                } else {
+                    body.classList.remove('dark');
+                    sunIcon.classList.add('hidden');
+                    moonIcon.classList.remove('hidden');
+                }
+            }
+
+            // Checar o tema salvo no localStorage ou preferência do sistema
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                // Se não houver tema salvo, usar a preferência do sistema
+                applyTheme('dark');
+            } else {
+                applyTheme('light');
+            }
+
+            // Adicionar evento de clique para alternar o tema
+            themeToggleBtn.addEventListener('click', () => {
+                if (body.classList.contains('dark')) {
+                    applyTheme('light');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    applyTheme('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

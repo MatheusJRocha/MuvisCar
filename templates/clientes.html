@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Clientes - MuvisCar</title>
+    
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/home.css">
+
+<style>
+/* Estilos do tema escuro - VERSÃO MAIS CLARA E TRANSPARENTE */
+body.dark {
+    background-color: #082338; /* Fundo principal: um cinza escuro mais claro */
+    color:  #082338; /* Cor do texto principal: um branco suave */
+}
+.dark .glass-effect {
+    background:  #082338(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px); 
+    border: 1px solid  #082338(255, 255, 255, 0.15);
+    color:  #082338;
+}
+.dark .text-gray-800 { color: #f0f0f0; } 
+.dark .text-gray-700 { color: #e0e0e0; }
+.dark .text-gray-600 { color: #a0a0a0; }
+.dark .bg-gray-100 { background-color:  #082338; } /* Fundo de elementos: cinza mais claro */
+.dark .hover\:bg-gray-200:hover { background-color:  #082338; }
+.dark .border-gray-200 { border-color:  #082338; }
+.dark .bg-white { background-color:  #082338; } /* Fundo de elementos brancos: cinza escuro mais claro */
+.dark .hover\:bg-gray-100:hover { background-color:  #082338; }
+
+/* Estilo para os cards de carro e filtro - AGORA TRANSPARENTE E UNIFICADO */
+.dark .car-card,
+.dark .filter-card {
+    background: rgba(255, 255, 255, 0.08); /* Fundo semi-transparente para ambos */
+    backdrop-filter: blur(12px); /* Efeito de vidro borrado */
+    border: 1px solid rgba(255, 255, 255, 0.15); 
+}
+.dark .car-card .shadow-lg {
+    box-shadow: 0 4px 8px rgba(34, 34, 34, 0.185); 
+}
+.dark .car-card .hover\:shadow-2xl:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.185);
+}
+
+/* Estilo para o card de filtro no tema escuro - Sombras */
+.dark .filter-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.185);
+}
+.dark .search-input,
+.dark .filter-card select {
+    background-color: #333333; /* Fundo do input e select mais claro */
+    color: #f0f0f0;
+    border-color: #555555;
+}
+.dark .search-input::placeholder {
+    color: #a0a0a0;
+}
+.dark .bg-gray-600 {
+    background-color: #555555;
+}
+.dark .bg-gray-600:hover {
+    background-color: #666666;
+}
+</style>
+
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg logo-animation">
+                        <i class="fas fa-car text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">MuvisCar</h1>
+                        <p class="text-sm text-gray-600">Sistema de Locação</p>
+                    </div>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="/home" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-home mr-2"></i>Início
+                    </a>
+                    <a href="/carros" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-car text-lg"></i>
+                    <span class="font-medium">Carros</span>
+                </a>
+                    <a href="/clientes" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-users mr-2"></i>Clientes
+                    </a>
+                    <a href="/locacoes" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-clipboard-list mr-2"></i>Locações
+                    </a>
+                </nav>
+                <button id="themeToggle" class="p-2 rounded-lg transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+                        <i id="sunIcon" class="fas fa-sun text-gray-500 dark:text-yellow-400 hidden"></i>
+                        <i id="moonIcon" class="fas fa-moon text-gray-500 dark:text-gray-400"></i>
+                    </button>
+                <!-- User Profile & Mobile Menu Button -->
+                <div class="flex items-center space-x-4">
+                    <!-- User Profile (Desktop) -->
+                    <div class="hidden md:flex items-center space-x-3">
+                        <div class="relative">
+                            <!-- <button class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 rounded-lg px-3 py-2 transition duration-300">
+                                <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-white text-sm"></i>
+                                </div>
+                                <span class="text-gray-700 font-medium">Admin</span>
+                                <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+                            </button> -->
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="md:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+
+    <!-- Main Content -->
+    <main class="container mx-auto mt-24 p-6">
+        <div class="bg-white rounded-xl shadow-xl p-8">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-4xl font-semibold text-gray-800">
+                    <i class="fas fa-users text-blue-600 mr-3"></i>Gestão de Clientes
+                </h2>
+                <button id="addClientBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center">
+                    <i class="fas fa-plus mr-2"></i>Novo Cliente
+                </button>
+            </div>
+
+            <!-- Search and Filters -->
+            <div class="bg-gray-50 p-6 rounded-lg mb-8 slide-up">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Buscar</label>
+                        <div class="relative">
+                            <input type="text" id="searchInput" placeholder="Nome, CPF/CNPJ, Email..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Tipo</label>
+                        <select id="typeFilter" class="w-full py-2 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Todos</option>
+                            <option value="individual">Pessoa Física</option>
+                            <option value="corporate">Pessoa Jurídica</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Status</label>
+                        <select id="statusFilter" class="w-full py-2 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Todos</option>
+                            <option value="active">Ativo</option>
+                            <option value="inactive">Inativo</option>
+                            <!-- O status "blocked" não é diretamente mapeado para o campo 'ativo' do BD,
+                                 mas pode ser tratado como inativo para fins de filtragem ou ter uma lógica específica no backend.
+                                 Para este exercício, 'inactive' e 'blocked' serão tratados como ativo=false. -->
+                            <option value="blocked">Bloqueado</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button id="clearFiltersBtn" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition duration-300 w-full">
+                            <i class="fas fa-eraser mr-2"></i>Limpar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client Form (Hidden by default) -->
+            <div id="clientFormContainer" class="hidden bg-blue-50 p-8 rounded-xl mb-8 shadow-inner fade-in">
+                <h3 id="formTitle" class="text-3xl font-semibold text-blue-800 mb-6 text-center">
+                    <i class="fas fa-user-plus mr-2"></i>Adicionar Cliente
+                </h3>
+                <form id="clientForm">
+                    <input type="hidden" id="originalId">
+                    
+                    <!-- Basic Information -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-semibold text-gray-700 mb-4 border-b border-gray-300 pb-2">
+                            <i class="fas fa-info-circle text-blue-600 mr-2"></i>Informações Básicas
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="clientType">Tipo de Cliente <span class="text-red-500">*</span></label>
+                                <select id="clientType" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="individual">Pessoa Física</option>
+                                    <option value="corporate">Pessoa Jurídica</option>
+                                </select>
+                                <div id="clientTypeError" class="error-message hidden"></div>
+                            </div>
+                            <div>
+                                <label id="documentLabel" class="block text-gray-700 text-sm font-bold mb-2" for="document">CPF/CNPJ <span class="text-red-500">*</span></label>
+                                <input type="text" id="document" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="000.000.000-00" required>
+                                <div id="documentError" class="error-message hidden"></div>
+                            </div>
+                            <div>
+                                <label id="nameLabel" class="block text-gray-700 text-sm font-bold mb-2" for="name">Nome Completo <span class="text-red-500">*</span></label>
+                                <input type="text" id="name" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nome completo" required>
+                                <div id="nameError" class="error-message hidden"></div>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="birthDate">Data de Nascimento/Fundação</label>
+                                <input type="date" id="birthDate" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <!-- Não há div de erro para data de nascimento, mas a validação pode ser adicionada no JS -->
+                            </div>
+                            <!-- NOVO CAMPO: SENHA -->
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Senha <span class="text-red-500">*</span></label>
+                                <input type="password" id="password" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Mínimo 6 caracteres" required minlength="6">
+                                <div id="passwordError" class="error-message hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-semibold text-gray-700 mb-4 border-b border-gray-300 pb-2">
+                            <i class="fas fa-phone text-blue-600 mr-2"></i>Informações de Contato
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email <span class="text-red-500">*</span></label>
+                                <input type="email" id="email" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="email@exemplo.com" required>
+                                <div id="emailError" class="error-message hidden"></div>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Telefone <span class="text-red-500">*</span></label>
+                                <input type="text" id="phone" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="(00) 00000-0000" required>
+                                <div id="phoneError" class="error-message hidden"></div>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="status">Status</label>
+                                <select id="status" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="active">Ativo</option>
+                                    <option value="inactive">Inativo</option>
+                                    <option value="blocked">Bloqueado</option>
+                                </select>
+                                <!-- Não há div de erro para status, mas a validação pode ser adicionada no JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address Information -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-semibold text-gray-700 mb-4 border-b border-gray-300 pb-2">
+                            <i class="fas fa-map-marker-alt text-blue-600 mr-2"></i>Endereço
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="zipCode">CEP</label>
+                                <input type="text" id="zipCode" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="00000-000">
+                                <div id="zipCodeError" class="error-message hidden"></div>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="address">Endereço</label>
+                                <input type="text" id="address" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Rua, Avenida...">
+                                <!-- Não há div de erro para endereço -->
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="city">Cidade</label>
+                                <input type="text" id="city" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Cidade">
+                                <!-- Não há div de erro para cidade -->
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="state">Estado</label>
+                                <select id="state" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Selecione...</option>
+                                    <option value="AC">Acre</option>
+                                    <option value="AL">Alagoas</option>
+                                    <option value="AP">Amapá</option>
+                                    <option value="AM">Amazonas</option>
+                                    <option value="BA">Bahia</option>
+                                    <option value="CE">Ceará</option>
+                                    <option value="DF">Distrito Federal</option>
+                                    <option value="ES">Espírito Santo</option>
+                                    <option value="GO">Goiás</option>
+                                    <option value="MA">Maranhão</option>
+                                    <option value="MT">Mato Grosso</option>
+                                    <option value="MS">Mato Grosso do Sul</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="PA">Pará</option>
+                                    <option value="PB">Paraíba</option>
+                                    <option value="PR">Paraná</option>
+                                    <option value="PE">Pernambuco</option>
+                                    <option value="PI">Piauí</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="RN">Rio Grande do Norte</option>
+                                    <option value="RS">Rio Grande do Sul</option>
+                                    <option value="RO">Rondônia</option>
+                                    <option value="RR">Roraima</option>
+                                    <option value="SC">Santa Catarina</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="SE">Sergipe</option>
+                                    <option value="TO">Tocantins</option>
+                                </select>
+                                <div id="stateError" class="error-message hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="flex justify-end space-x-4 pt-6 border-t border-gray-300">
+                        <button type="button" id="cancelFormBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300 flex items-center">
+                            <i class="fas fa-times mr-2"></i>Cancelar
+                        </button>
+                        <button type="submit" id="saveClientBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 flex items-center">
+                            <i class="fas fa-save mr-2"></i>Salvar Cliente
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Client Table - CABEÇALHO CORRIGIDO -->
+                <div class="overflow-x-auto rounded-lg shadow-md slide-up">
+                    <table class="min-w-full bg-white">
+                        <thead>
+                            <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
+                                <th class="py-3 px-4 text-left">ID</th>
+                                <th class="py-3 px-4 text-left">Nome</th>
+                                <th class="py-3 px-4 text-left">Email</th>
+                                <th class="py-3 px-4 text-left">Telefone</th>
+                                <th class="py-3 px-4 text-left">CPF/CNPJ</th>
+                                <th class="py-3 px-4 text-left">Tipo</th>
+                                <th class="py-3 px-4 text-left">Status</th>
+                                <th class="py-3 px-4 text-left">Data Criação</th>
+                                <th class="py-3 px-4 text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientTableBody" class="text-gray-700 text-sm">
+                            <tr>
+                                <td colspan="9" class="text-center py-8 text-gray-500">
+                                    <div class="loading-spinner"></div>
+                                    Carregando clientes...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Client History Modal -->
+    <div id="historyModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden modal">
+        <div class="bg-white rounded-xl shadow-2xl w-11/12 max-w-4xl max-h-90vh overflow-hidden">
+            <div class="bg-blue-600 text-white p-6 flex justify-between items-center">
+                <h3 class="text-2xl font-bold">
+                    <i class="fas fa-history mr-2"></i>Histórico de Locações
+                </h3>
+                <button id="closeHistoryModal" class="text-white hover:text-gray-200 text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-96">
+                <div id="historyContent" class="space-y-4">
+                    <!-- History content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client Details Modal -->
+    <div id="clientDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden modal">
+        <div class="bg-white rounded-xl shadow-2xl w-11/12 max-w-2xl max-h-90vh overflow-hidden">
+            <div class="bg-blue-600 text-white p-6 flex justify-between items-center">
+                <h3 class="text-2xl font-bold">
+                    <i class="fas fa-user-circle mr-2"></i>Detalhes do Cliente
+                </h3>
+                <button id="closeClientDetailsModal" class="text-white hover:text-gray-200 text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-96">
+                <div id="clientDetailsContent" class="space-y-4 text-gray-700">
+                    <!-- Detalhes do cliente serão carregados aqui -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/static/js/clientes.js"></script>
+</body>     
+</html>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('themeToggle');
+            const sunIcon = document.getElementById('sunIcon');
+            const moonIcon = document.getElementById('moonIcon');
+            const body = document.body;
+
+            // Função para aplicar o tema
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    body.classList.add('dark');
+                    sunIcon.classList.remove('hidden');
+                    moonIcon.classList.add('hidden');
+                } else {
+                    body.classList.remove('dark');
+                    sunIcon.classList.add('hidden');
+                    moonIcon.classList.remove('hidden');
+                }
+            }
+
+            // Checar o tema salvo no localStorage ou preferência do sistema
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                // Se não houver tema salvo, usar a preferência do sistema
+                applyTheme('dark');
+            } else {
+                applyTheme('light');
+            }
+
+            // Adicionar evento de clique para alternar o tema
+            themeToggleBtn.addEventListener('click', () => {
+                if (body.classList.contains('dark')) {
+                    applyTheme('light');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    applyTheme('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

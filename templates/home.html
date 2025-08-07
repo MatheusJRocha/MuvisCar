@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MuvisCar - Sistema de Locação Avançado</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/home.css">
+<style>
+    /* Estilos do tema escuro */
+    body.dark {
+        background-color: #121212;
+        color: #E0E0E0;
+    }
+    .dark .glass-effect {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #E0E0E0;
+    }
+    .dark .text-gray-800 { color: #E0E0E0; }
+    .dark .text-gray-700 { color: #B0B0B0; }
+    .dark .text-gray-600 { color: #808080; }
+    .dark .bg-gray-100 { background-color: #2D2D2D; }
+    .dark .hover\:bg-gray-200:hover { background-color: #3D3D3D; }
+    .dark .border-gray-200 { border-color: #444444; }
+    .dark .bg-white { background-color: #1E1E1E; }
+    .dark .hover\:bg-gray-100:hover { background-color: #282828; }
+    /* Estilo para os cards de carro */
+    .dark .car-card {
+        background-color: #1E1E1E; 
+        border: 1px solid #333; 
+    }
+    .dark .car-card .shadow-lg {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); 
+    }
+    .dark .car-card .hover\:shadow-2xl:hover {
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+    }
+    /* NOVO: Estilo para o card de filtro no tema escuro */
+    .dark .filter-card {
+        background-color: #1E1E1E;
+        border: 1px solid #333;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+    .dark .search-input,
+    .dark .filter-card select {
+        background-color: #2D2D2D;
+        color: #E0E0E0;
+        border-color: #444444;
+    }
+    .dark .search-input::placeholder {
+        color: #808080;
+    }
+    .dark .bg-gray-600 {
+        background-color: #444444;
+    }
+    .dark .bg-gray-600:hover {
+        background-color: #555555;
+    }
+</style>
+</head>
+<body class="bg-gray-50 transition-colors duration-500">
+    
+    <video class="video-background" autoplay muted loop playsinline webkit-playsinline>
+    <source src="static/videos/backgroud.mp4" type="video/mp4">
+    Seu navegador não suporta vídeos HTML5.
+</video>
+<div class="video-overlay"></div>
+
+    
+    <header class="glass-effect shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg logo-animation">
+                        <i class="fas fa-car text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">MuvisCar</h1>
+                        <p class="text-sm text-gray-600">Sistema de Locação</p>
+                    </div>
+                </div>
+                
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="/home" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-home mr-2"></i>Início
+                    </a>
+                    <a href="/carros" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-car text-lg"></i>
+                    <span class="font-medium">Carros</span>
+                </a>
+                    <a href="/clientes" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-users mr-2"></i>Clientes
+                    </a>
+                    <a href="/locacoes" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                        <i class="fas fa-clipboard-list mr-2"></i>Locações
+                </a>
+                <a href="#contato" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
+                    <i class="fas fa-phone mr-2"></i>Contato
+                </a>
+            </nav>
+                
+                <div class="flex items-center space-x-4">
+                    <button id="themeToggle" class="p-2 rounded-lg transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+                        <i id="sunIcon" class="fas fa-sun text-gray-500 dark:text-yellow-400 hidden"></i>
+                        <i id="moonIcon" class="fas fa-moon text-gray-500 dark:text-gray-400"></i>
+                    </button>
+                    
+                    <div class="relative">
+                        <button id="profileButton" class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 rounded-lg px-3 py-2 transition duration-300">
+                            <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-white text-sm"></i>
+                            </div>
+                            <span class="text-gray-700 font-medium">Admin</span>
+                            <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+                        </button>
+                        
+                        <div id="dropdownMenu" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg hidden">
+                        <a href="/login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logar</a>
+                        <a href="#" id="logoutButton" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sair</a>
+                    </div>
+                    </div>
+                    
+                    <button id="mobileMenuBtn" class="md:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div id="backdrop" class="backdrop fixed inset-0 z-40 md:hidden"></div>
+    
+    <div id="mobileMenu" class="mobile-menu fixed top-0 left-0 h-full w-64 glass-effect shadow-xl z-50 md:hidden">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+                        <i class="fas fa-car text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800">MuvisCar</h2>
+                        <p class="text-sm text-gray-600">Sistema de Locação</p>
+                    </div>
+                </div>
+                <button id="closeMobileMenu" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <nav class="space-y-4">
+                <a href="#home" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-home text-lg"></i>
+                    <span class="font-medium">Início</span>
+                </a>
+                <a href="#carros" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-car text-lg"></i>
+                    <span class="font-medium">Carros</span>
+                </a>
+                <a href="#sobre" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-info-circle text-lg"></i>
+                    <span class="font-medium">Sobre</span>
+                </a>
+                <a href="#contato" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-phone text-lg"></i>
+                    <span class="font-medium">Contato</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+    
+    <section id="inicio" class="hero-section pt-20">
+        <div class="container mx-auto px-4 text-center">
+            <div class="glass-effect rounded-2xl p-12 max-w-4xl mx-auto">
+                <h1 class="text-5xl md:text-6xl font-bold text-gray-800 mb-6">
+                    EM <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">#CONSTRUÇÃO</span>
+                </h1>
+                <button onclick="scrollToSection('carros')" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-search mr-2"></i>Explorar Carros
+                </button>
+    </section>
+    
+    <section id="carros" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="filter-card rounded-2xl p-6 mb-8">
+                
+                <div class="mb-6">
+                    <div class="relative max-w-md mx-auto">
+                        <input type="text" id="searchInput" placeholder="Buscar por modelo, marca..." 
+                                    class="search-input w-full pl-12 pr-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-4 gap-6">
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Marca</label>
+                        <select id="brandFilter" class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Todas as marcas</option>
+                            <option value="toyota">Toyota</option>
+                            <option value="honda">Honda</option>
+                            <option value="ford">Ford</option>
+                            <option value="chevrolet">Chevrolet</option>
+                            <option value="volkswagen">Volkswagen</option>
+                            <option value="bmw">BMW</option>
+                            <option value="mercedes">Mercedes-Benz</option>
+                            <option value="audi">Audi</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Categoria</label>
+                        <select id="categoryFilter" class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Todas as categorias</option>
+                            <option value="economico">Econômico</option>
+                            <option value="compacto">Compacto</option>
+                            <option value="sedan">Sedan</option>
+                            <option value="suv">SUV</option>
+                            <option value="luxury">Luxo</option>
+                            <option value="esportivo">Esportivo</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Preço/Dia</label>
+                        <select id="priceFilter" class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Todos os preços</option>
+                            <option value="0-100">Até R$ 100</option>
+                            <option value="100-200">R$ 100 - R$ 200</option>
+                            <option value="200-300">R$ 200 - R$ 300</option>
+                            <option value="300-500">R$ 300 - R$ 500</option>
+                            <option value="500+">Acima de R$ 500</option>
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                        <label for="priceRange" class="block text-sm font-semibold text-gray-700 mb-2">Preço máximo por dia: <span id="priceValue" class="text-blue-600 font-bold">R$ 300</span></label>
+                        
+                        <input
+                            type="range"
+                            id="priceRange"
+                            name="priceRange"
+                            min="50"
+                            max="1000"
+                            step="50"
+                            value="300"
+                            class="w-full h-2 bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 rounded-lg appearance-none cursor-pointer"
+                        >
+                        
+                        <div class="flex items-end">
+                            <button id="clearFilters" class="w-full bg-gray-600 text-white py-3 px-4 rounded-lg hover:bg-gray-700 transition duration-300">
+                                <i class="fas fa-times mr-2"></i>Limpar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="carsGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="car-card rounded-2xl p-6 shadow-lg hover:shadow-2xl card-hover fade-in" data-car-id="1">
+                    <div class="car-image-zoom rounded-lg mb-4 overflow-hidden">
+                        <img src="https://via.placeholder.com/400x250/3B82F6/FFFFFF?text=Carro+Modelo" alt="Carro Modelo" class="w-full h-48 object-cover rounded-lg">
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Modelo do Carro</h3>
+                    <p class="text-gray-600 mb-4">Marca do Carro</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-2xl font-bold text-blue-600">R$ 150/dia</span>
+                        <div class="flex items-center text-yellow-500">
+                            <i class="fas fa-star text-sm mr-1"></i>
+                            <span class="text-sm font-semibold">4.8</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center text-gray-600 text-sm mb-4 space-x-4">
+                        <span class="flex items-center"><i class="fas fa-cogs mr-1"></i>Automático</span>
+                        <span class="flex items-center"><i class="fas fa-gas-pump mr-1"></i>Gasolina</span>
+                        <span class="flex items-center"><i class="fas fa-users mr-1"></i>5 Pessoas</span>
+                    </div>
+                    <button class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 view-details-btn" data-car-id="1">
+                        VER DETALHES
+                    </button>
+                </div>
+            </div>
+            
+            <div id="noResults" class="text-center py-16 hidden">
+                <div class="glass-effect rounded-2xl p-8 max-w-md mx-auto">
+                    <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Nenhum resultado encontrado</h3>
+                    <p class="text-gray-500">Tente ajustar os filtros ou realizar uma nova busca.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div id="carModal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="backdrop absolute inset-0 bg-black bg-opacity-50" onclick="closeCarModal()"></div>
+        <div class="glass-effect rounded-2xl max-w-4xl w-full max-h-screen overflow-y-auto relative">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="modalTitle" class="text-2xl font-bold text-gray-800"></h3>
+                    <button onclick="closeCarModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    
+                    <div>
+                        <div class="mb-4">
+                            <img id="modalMainImage" src="" alt="" class="w-full h-64 object-cover rounded-lg">
+                        </div>
+                        <div id="modalImageGallery" class="grid grid-cols-4 gap-2">
+                            </div>
+                    </div>
+                    
+                    <div>
+                        <div id="modalDetails" class="space-y-4">
+                            <p class="text-gray-700"><span class="font-semibold">Marca:</span> <span id="modalBrand"></span></p>
+                            <p class="text-gray-700"><span class="font-semibold">Modelo:</span> <span id="modalModel"></span></p>
+                            <p class="text-gray-700"><span class="font-semibold">Ano:</span> <span id="modalYear"></span></p>
+                            <p class="text-gray-700"><span class="font-semibold">Placa:</span> <span id="modalPlate"></span></p>
+                            <p class="text-gray-700"><span class="font-semibold">Cor:</span> <span id="modalColor"></span></p>
+                            <p class="text-gray-700"><span class="font-semibold">Quilometragem:</span> <span id="modalMileage"></span></p>
+                            <p class="text-gray-700"><span class="font-semibold">Combustível:</span> <span id="modalFuelType"></span></p>
+                            <p class="text-gray-700"><span class="font-semibold">Passageiros:</span> <span id="modalPassengers"></span></p>
+                            <p class="text-gray-700"><span class="font-semibold">Categoria:</span> <span id="modalCategory"></span></p>
+                            <p class="text-gray-700"><span class="font-semibold">Preço/dia:</span> <span id="modalPrice" class="text-blue-600 font-bold"></span></p>
+
+                        </div>
+                        
+                        <div class="mt-8 space-y-3">
+                            <button class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-xl transition duration-300">
+                                <i class="fas fa-calendar-alt mr-2"></i>Reservar Agora
+                            </button>
+                            <button class="w-full border border-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-50 transition duration-300" onclick="window.location.href='contato.html'">
+                            <i class="fas fa-phone mr-2"></i>Falar com Consultor
+                        </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <section id="sobre" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="glass-effect rounded-2xl p-12">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">Por que escolher a MuvisCar?</h2>
+                    <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                        Mais de 15 anos de experiência no mercado de locação de veículos
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-shield-alt text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Segurança Total</h3>
+                        <p class="text-gray-600">Todos os nossos veículos passam por rigorosa inspeção e possuem seguro completo.</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-clock text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Disponibilidade 24h</h3>
+                        <p class="text-gray-600">Atendimento e suporte técnico disponível 24 horas por dia, 7 dias por semana.</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-dollar-sign text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Preços Competitivos</h3>
+                        <p class="text-gray-600">Oferecemos os melhores preços do mercado com qualidade garantida.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contato" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="glass-effect rounded-2xl p-12">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">Entre em Contato</h2>
+                    <p class="text-xl text-gray-600">Estamos prontos para atendê-lo</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div class="space-y-6">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-phone text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Telefone</h3>
+                                <p class="text-gray-600">(11) 9999-9999</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-envelope text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Email</h3>
+                                <p class="text-gray-600">contato@MuvisCar.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-map-marker-alt text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Endereço</h3>
+                                <p class="text-gray-600">Av. Paulista, 1000 - São Paulo, SP</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form class="space-y-4">
+                        <div>
+                            <input type="text" placeholder="Seu nome" class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="email" placeholder="Seu email" class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <textarea placeholder="Sua mensagem" rows="4" class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-xl transition duration-300">
+                            <i class="fas fa-paper-plane mr-2"></i>Enviar Mensagem
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/pt.js"></script>
+    <script src="/static/js/home.js"></script>   
+</body>
+</html>
