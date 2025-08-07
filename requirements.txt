@@ -1,0 +1,10 @@
+# requirements.txt
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+sqlite-utils
+python-dotenv
+redis
+passlib[bcrypt]
+

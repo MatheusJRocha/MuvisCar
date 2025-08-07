@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  redis:
+    image: redis:latest
+    restart: always
+    container_name: redis_default
+    ports:
+      - 6379:6379 
+      - 8001:8001 
+    networks:
+      docker_network:
+    
+networks:
+  docker_network:
+    # external: true

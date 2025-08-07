@@ -1,0 +1,84 @@
+# Arquivos e diretórios gerados pelo Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/  # Diretório padrão do Poetry para o ambiente virtual
+*.egg-info/
+.coverage
+.pytest_cache/
+htmlcov/
+.tox/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Arquivos de ambiente
+.env
+.env.*
+!.env.example # Se você tiver um arquivo .env.example que deseja versionar
+
+# Arquivos de banco de dados
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+/database/*.db # Para o seu locacar.db na pasta database/
+/database/*.db-journal
+
+# Logs e arquivos temporários
+*.log
+*.tmp
+*.temp
+temp/
+tmp/
+logs/
+.ipynb_checkpoints/ # Notebooks Jupyter
+
+# Ferramentas de IDE
+.idea/                  # PyCharm
+.vscode/                # VS Code
+*.sublime-project       # Sublime Text
+*.sublime-workspace
+.DS_Store               # macOS
+Thumbs.db               # Windows
+ehthumbs.db
+Desktop.ini
+
+# Arquivos de distribuição e empacotamento
+dist/
+build/
+*.egg
+*.whl
+*.zip
+*.tar.gz
+
+# Arquivos de teste e cobertura
+.coverage
+.coverage.*
+nosetests.xml
+coverage.xml
+.cache/
+.nox/
+
+# Arquivos de documentação gerados
+docs/_build/
+
+# Arquivos de configuração de CI/CD (se não forem versionados)
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Arquivos de dados grandes (se aplicável, para dados que não devem ser versionados)
+# data/
+# media/
+
+# Arquivos de upload (se aplicável)
+uploads/
+
+# Arquivos gerados pelo Alembic
+alembic/versions/*.pyc
+alembic/versions/*.pyo

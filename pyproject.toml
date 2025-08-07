@@ -1,0 +1,32 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "MatheusJRocha",email = "matheusrochadev.mo@outlook.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "psycopg2 (>=2.9.10,<3.0.0)",
+    "passlib[bcrypt] (>=1.7.4,<2.0.0)",
+    "redis (>=6.2.0,<7.0.0)",
+    "python-dotenv (>=1.1.1,<2.0.0)",
+    "sqlite-utils (>=3.38,<4.0)",
+    "psycopg2-binary (>=2.9.10,<3.0.0)",
+    "sqlalchemy (>=2.0.41,<3.0.0)",
+    "uvicorn[standard] (>=0.35.0,<0.36.0)",
+    "fastapi[all] (>=0.116.1,<0.117.0)",
+    "pydantic[email] (>=2.11.7,<3.0.0)",
+    "jinja2 (>=3.1.6,<4.0.0)",
+    "python-multipart (>=0.0.20,<0.0.21)",
+    "alembic (>=1.16.4,<2.0.0)",
+    "jose (>=1.0.0,<2.0.0)",
+    "jwt (>=1.4.0,<2.0.0)",
+    "python-jose (>=3.5.0,<4.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
