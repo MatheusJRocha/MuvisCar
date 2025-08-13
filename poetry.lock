@@ -1889,6 +1889,17 @@ files = [
 widechars = ["wcwidth"]
 
 [[package]]
+name = "tailwindcss"
+version = "0.0.1"
+description = "to use tailwindcss"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "tailwindcss-0.0.1.tar.gz", hash = "sha256:2ba71105662701a522a13367844f7f5e8830456da69f30048291440431f8875b"},
+]
+
+[[package]]
 name = "typer"
 version = "0.16.0"
 description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
@@ -2319,4 +2330,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "a20551098d947db99e554b35d004a9186cddfcd06b8b20211e701a1cc7ea1b10"
+content-hash = "a8e94517e9046f9b5ece79770f48c019988c26450486be502383dd9094635521"

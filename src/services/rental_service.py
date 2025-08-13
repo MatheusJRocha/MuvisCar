@@ -92,16 +92,19 @@ class RentalService:
         return True
     
     def finish_rental(self, rental_id: int, rental_data: FinishRentalRequest) -> Optional[Rental]:
-        """
-        Finalizar locação, atualizando dados de retorno.
-        A assinatura da função foi corrigida para corresponder à rota.
-        """
+   
         db_rental = self.get_rental_by_id(rental_id)
         if not db_rental:
             return None
-        
+
+        # Verificação de estado: a locação deve estar ATIVA para ser finalizada.
         if db_rental.status != RentalStatus.ATIVA:
-            raise ValueError("Locação não está ativa")
+            # Aumentar a clareza do erro para o cliente da API.
+            raise ValueError(f"A locação com ID {rental_id} não está ativa. Status atual: {db_rental.status}")
+        
+        # Validação de milhagem final: não pode ser menor que a inicial.
+        if rental_data.final_mileage < db_rental.mileage_start:
+            raise ValueError("A quilometragem final não pode ser menor que a quilometragem inicial.")
         
         # Atualizar a locação com os dados do frontend
         db_rental.status = RentalStatus.FINALIZADA
@@ -111,14 +114,19 @@ class RentalService:
         db_rental.late_fee = rental_data.late_fee
         db_rental.return_notes = rental_data.return_notes
         
-        # Atualizar quilometragem do carro e status
+        # Atualizar o carro em uma única operação para manter a atomicidade.
         car = self.car_service.get_car_by_id(db_rental.car_id)
         if car:
             car.mileage = rental_data.final_mileage
-            self.car_service.update_car_status(db_rental.car_id, CarStatus.DISPONIVEL)
-        
+            car.status = CarStatus.DISPONIVEL
+        else:
+            # Lançar um erro se o carro não for encontrado, pois é uma dependência crucial.
+            raise ValueError(f"Carro com ID {db_rental.car_id} não encontrado.")
+
+        # Commit da transação para salvar todas as alterações (locação e carro)
         self.db.commit()
         self.db.refresh(db_rental)
+        
         return db_rental
     
     def get_rentals_by_cliente(self, cliente_id: int) -> List[Rental]:

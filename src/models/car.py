@@ -19,6 +19,18 @@ class CarStatus(PyEnum):
     ALUGADO = "ALUGADO"
     MANUTENCAO = "MANUTENCAO"
 
+# NOVOS ENUMS PARA OS NOVOS CAMPOS
+class FuelType(PyEnum):
+    GASOLINA = "GASOLINA"
+    ETANOL = "ETANOL"
+    FLEX = "FLEX"
+    DIESEL = "DIESEL"
+    ELETRICO = "ELETRICO"
+
+class TransmissionType(PyEnum):
+    AUTOMATICO = "AUTOMATICO"
+    MANUAL = "MANUAL"
+
 class Car(Base):
     __tablename__ = "cars"
     
@@ -32,6 +44,12 @@ class Car(Base):
     daily_rate = Column(DECIMAL(10,2), nullable=False)
     mileage = Column(Integer, nullable=False)
     status = Column(Enum(CarStatus), nullable=False, default=CarStatus.DISPONIVEL)
+    
+    # NOVOS CAMPOS ADICIONADOS AQUI
+    fuel_type = Column(Enum(FuelType), nullable=False, default=FuelType.FLEX)
+    transmission_type = Column(Enum(TransmissionType), nullable=False, default=TransmissionType.MANUAL)
+    passengers = Column(Integer, nullable=False, default=5)
+    
     features = Column(JSON, nullable=True, default=list)
     images = Column(JSON, nullable=True, default=list)
     
@@ -42,6 +60,8 @@ class Car(Base):
     # Relacionamento com locações
     locacoes = relationship("Rental", back_populates="carro")
 
+# ---
+    
 class CarCreate(BaseModel):
     brand: constr(min_length=1, max_length=50) = Field(...) # type: ignore
     model: constr(min_length=1, max_length=50) = Field(...) # type: ignore
@@ -52,6 +72,12 @@ class CarCreate(BaseModel):
     daily_rate: condecimal(gt=0) = Field(...) # type: ignore
     mileage: conint(ge=0) = Field(...) # type: ignore
     status: Optional[CarStatus] = CarStatus.DISPONIVEL
+    
+    # NOVOS CAMPOS ADICIONADOS AQUI
+    fuel_type: FuelType = Field(...)
+    transmission_type: TransmissionType = Field(...)
+    passengers: conint(ge=1, le=10) = Field(...) # type: ignore
+    
     features: Optional[List[str]] = Field(default_factory=list)
     images: Optional[List[str]] = Field(default_factory=list)
 
@@ -59,7 +85,8 @@ class CarCreate(BaseModel):
         orm_mode = True
         allow_population_by_field_name = True
 
-
+# ---
+    
 class CarOut(BaseModel):
     id: str
     brand: str
@@ -71,6 +98,12 @@ class CarOut(BaseModel):
     daily_rate: float
     mileage: int
     status: CarStatus
+    
+    # NOVOS CAMPOS ADICIONADOS AQUI
+    fuel_type: FuelType
+    transmission_type: TransmissionType
+    passengers: int
+    
     features: Optional[List[str]] = []
     images: Optional[List[str]] = []
     created_at: str

@@ -1,4 +1,3 @@
-# Seu código de imports e configurações...
 import os
 from fastapi import FastAPI, Request, Response, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,7 +10,7 @@ from pathlib import Path
 # Seus imports de rotas...
 from src.config.database import Base, engine
 from src.routes.car_routes import backend as car_router
-from src.routes.rental_routes import UPLOAD_DIRECTORY, backend as rental_router # Importe UPLOAD_DIRECTORY
+from src.routes.rental_routes import UPLOAD_DIRECTORY, backend as rental_router
 from src.routes.clientes_routes import backend as clientes_router
 from src.routes.login_router import backend as login_router
 
@@ -128,7 +127,7 @@ async def logout(response: Response):
 app.include_router(car_router, prefix="/cars", tags=["Carros"])
 app.include_router(clientes_router, prefix="/clientes", tags=["Clientes"])
 # A rota de upload da CNH deve ser incluída sem prefixo
-app.include_router(rental_router, prefix="/rental", tags=["Locações"]) 
+app.include_router(rental_router, prefix="/rental", tags=["Locações"])
 app.include_router(login_router, prefix="/login", tags=["Login"])
 
 
@@ -171,8 +170,9 @@ async def not_found_handler(request: Request, exc):
                 "GET /rental/locacoes",
                 "GET /rental/locacoes/{rental_id}",
                 "POST /rental/locacoes",
+                "PUT /rental/locacoes/{rental_id}",
                 "DELETE /rental/locacoes/{rental_id}",
-                "POST /rental/locacoes/locacoes/{rental_id}/finish",
+                "PATCH /rental/locacoes/{rental_id}/finalizar"
             ]
         }
     )
