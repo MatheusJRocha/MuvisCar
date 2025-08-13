@@ -1,86 +1,151 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Clientes - MuvisCar</title>
+    <title>MuvisCar - Sistema de Locação Avançado</title>
     
-    <!-- Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="static/css/home.css">
+    <style>
+        /* Estilos do tema escuro */
+        body.dark {
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+        .dark .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #E0E0E0;
+        }
+        .dark .text-gray-800 { color: #E0E0E0; }
+        .dark .text-gray-700 { color: #B0B0B0; }
+        .dark .text-gray-600 { color: #808080; }
+        .dark .bg-gray-100 { background-color: #2D2D2D; }
+        .dark .hover\:bg-gray-200:hover { background-color: #3D3D3D; }
+        .dark .border-gray-200 { border-color: #444444; }
+        .dark .bg-white { background-color: #1E1E1E; }
+        .dark .hover\:bg-gray-100:hover { background-color: #282828; }
+        /* Estilo para os cards de carro */
+        .dark .car-card {
+            background-color: #1E1E1E; 
+            border: 1px solid #333; 
+        }
+        .dark .car-card .shadow-lg {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); 
+        }
+        .dark .car-card .hover\:shadow-2xl:hover {
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+        }
+        /* Estilo para o card de filtro no tema escuro */
+        .dark .filter-card {
+            background-color: #1E1E1E;
+            border: 1px solid #333;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .dark .search-input,
+        .dark .filter-card select {
+            background-color: #2D2D2D;
+            color: #E0E0E0;
+            border-color: #444444;
+        }
+        .dark .search-input::placeholder {
+            color: #808080;
+        }
+        .dark .bg-gray-600 {
+            background-color: #444444;
+        }
+        .dark .bg-gray-600:hover {
+            background-color: #555555;
+        }
 
-<style>
-/* Estilos do tema escuro - VERSÃO MAIS CLARA E TRANSPARENTE */
-body.dark {
-    background-color: #082338; /* Fundo principal: um cinza escuro mais claro */
-    color:  #082338; /* Cor do texto principal: um branco suave */
-}
-.dark .glass-effect {
-    background:  #082338(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px); 
-    border: 1px solid  #082338(255, 255, 255, 0.15);
-    color:  #082338;
-}
-.dark .text-gray-800 { color: #f0f0f0; } 
-.dark .text-gray-700 { color: #e0e0e0; }
-.dark .text-gray-600 { color: #a0a0a0; }
-.dark .bg-gray-100 { background-color:  #082338; } /* Fundo de elementos: cinza mais claro */
-.dark .hover\:bg-gray-200:hover { background-color:  #082338; }
-.dark .border-gray-200 { border-color:  #082338; }
-.dark .bg-white { background-color:  #082338; } /* Fundo de elementos brancos: cinza escuro mais claro */
-.dark .hover\:bg-gray-100:hover { background-color:  #082338; }
+        /* ----- ESTILOS DO NOVO BLOB BUTTON ----- */
+        .blob-btn {
+            text-decoration: none;
+            position: relative;
+            padding: 8px 12px;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: 400;
+            color: #4B5563; /* Cor do texto padrão */
+            transition: color 0.3s ease;
+            z-index: 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            border-radius: 9999px; /* Adicionado para borda arredondada */
+            border: 2px solid transparent; /* Adicionado para hover de borda */
+        }
+        .blob-btn:hover {
+            color: #fff;
+            border-color: #2563EB; /* Cor da borda no hover */
+        }
+        .dark .blob-btn {
+            color: #D1D5DB;
+        }
+        .dark .blob-btn:hover {
+            color: #121212;
+            border-color: #60A5FA; /* Cor da borda no hover para modo escuro */
+        }
+        .blob-btn__inner {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            overflow: hidden;
+            border-radius: 9999px;
+            filter: url(#goo);
+        }
+        .blob-btn__blobs {
+            position: relative;
+            display: block;
+            height: 100%;
+            filter: url(#goo);
+        }
+        .blob-btn__blob {
+            position: absolute;
+            top: 2px;
+            width: 25%;
+            height: 100%;
+            background: #2563EB; /* Cor do blob em modo claro */
+            border-radius: 100%;
+            transform: translate3d(0, 150%, 0) scale(1.7);
+            transition: transform 0.45s ease;
+        }
+        .blob-btn__blob:nth-child(1) { left: 0; transition-delay: 0s; }
+        .blob-btn__blob:nth-child(2) { left: 30%; transition-delay: 0.08s; }
+        .blob-btn__blob:nth-child(3) { left: 60%; transition-delay: 0.16s; }
+        .blob-btn__blob:nth-child(4) { left: 90%; transition-delay: 0.24s; }
+        .blob-btn:hover .blob-btn__blob {
+            transform: translate3d(0, 0%, 0) scale(1.7);
+        }
+        .dark .blob-btn__blob {
+            background: #60A5FA; /* Cor do blob em modo escuro */
+        }
 
-/* Estilo para os cards de carro e filtro - AGORA TRANSPARENTE E UNIFICADO */
-.dark .car-card,
-.dark .filter-card {
-    background: rgba(255, 255, 255, 0.08); /* Fundo semi-transparente para ambos */
-    backdrop-filter: blur(12px); /* Efeito de vidro borrado */
-    border: 1px solid rgba(255, 255, 255, 0.15); 
-}
-.dark .car-card .shadow-lg {
-    box-shadow: 0 4px 8px rgba(34, 34, 34, 0.185); 
-}
-.dark .car-card .hover\:shadow-2xl:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.185);
-}
-
-/* Estilo para o card de filtro no tema escuro - Sombras */
-.dark .filter-card {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.185);
-}
-.dark .search-input,
-.dark .filter-card select {
-    background-color: #333333; /* Fundo do input e select mais claro */
-    color: #f0f0f0;
-    border-color: #555555;
-}
-.dark .search-input::placeholder {
-    color: #a0a0a0;
-}
-.dark .bg-gray-600 {
-    background-color: #555555;
-}
-.dark .bg-gray-600:hover {
-    background-color: #666666;
-}
-</style>
-
+        .svg-filter-hidden {
+            position: absolute;
+            width: 0;
+            height: 0;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <!-- Header -->
-    <header class="bg-white shadow-lg fixed w-full top-0 z-50">
+<body class="transition-colors duration-500">
+    
+    
+    <header class="glass-effect shadow-lg fixed w-full top-0 z-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 
-                <!-- Logo -->
                 <div class="flex items-center space-x-3">
                     <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg logo-animation">
                         <i class="fas fa-car text-white text-2xl"></i>
@@ -91,42 +156,80 @@ body.dark {
                     </div>
                 </div>
                 
-                <!-- Desktop Navigation -->
                 <nav class="hidden md:flex items-center space-x-8">
-                    <a href="/home" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
-                        <i class="fas fa-home mr-2"></i>Início
+                    <a href="/home" class="blob-btn">
+                        <i class="fas fa-home mr-2"></i>
+                        <span class="font-medium">Início</span>
+                        <span class="blob-btn__inner">
+                            <span class="blob-btn__blobs">
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                            </span>
+                        </span>
                     </a>
-                    <a href="/carros" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
-                    <i class="fas fa-car text-lg"></i>
-                    <span class="font-medium">Carros</span>
-                </a>
-                    <a href="/clientes" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
-                        <i class="fas fa-users mr-2"></i>Clientes
+                    <a href="/carros" class="blob-btn">
+                        <i class="fas fa-car mr-2"></i>
+                        <span class="font-medium">Carros</span>
+                        <span class="blob-btn__inner">
+                            <span class="blob-btn__blobs">
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                            </span>
+                        </span>
                     </a>
-                    <a href="/locacoes" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
-                        <i class="fas fa-clipboard-list mr-2"></i>Locações
+                    <a href="/clientes" class="blob-btn">
+                        <i class="fas fa-users mr-2"></i>
+                        <span class="font-medium">Clientes</span>
+                        <span class="blob-btn__inner">
+                            <span class="blob-btn__blobs">
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                            </span>
+                        </span>
+                    </a>
+                    <a href="/locacoes" class="blob-btn">
+                        <i class="fas fa-clipboard-list mr-2"></i>
+                        <span class="font-medium">Locações</span>
+                        <span class="blob-btn__inner">
+                            <span class="blob-btn__blobs">
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                            </span>
+                        </span>
                     </a>
                 </nav>
-                <button id="themeToggle" class="p-2 rounded-lg transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+                
+                <div class="flex items-center space-x-4">
+                    <button id="themeToggle" class="p-2 rounded-lg transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-700">
                         <i id="sunIcon" class="fas fa-sun text-gray-500 dark:text-yellow-400 hidden"></i>
                         <i id="moonIcon" class="fas fa-moon text-gray-500 dark:text-gray-400"></i>
                     </button>
-                <!-- User Profile & Mobile Menu Button -->
-                <div class="flex items-center space-x-4">
-                    <!-- User Profile (Desktop) -->
-                    <div class="hidden md:flex items-center space-x-3">
-                        <div class="relative">
-                            <!-- <button class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 rounded-lg px-3 py-2 transition duration-300">
-                                <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-user text-white text-sm"></i>
-                                </div>
-                                <span class="text-gray-700 font-medium">Admin</span>
-                                <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
-                            </button> -->
+                    
+                    <div class="relative">
+                         <!-- Botão de perfil agora sem o estilo blob -->
+                        <button id="profileButton" class="flex items-center space-x-2 bg-white-100 hover:bg-white-200 rounded-lg px-3 py-2 transition duration-300">
+                            <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-white text-sm"></i>
+                            </div>
+                            <span class="text-white-700 font-medium">Admin</span>
+                            <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+                        </button>
+                        
+                        <div id="dropdownMenu" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg hidden">
+                            <a href="/login" id="loginButton" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logar</a>
+                            <a href="#" id="logoutButton" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sair</a>
+                            <a href="#" id="logoutButton" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Administrador</a>
                         </div>
                     </div>
                     
-                    <!-- Mobile Menu Button -->
                     <button id="mobileMenuBtn" class="md:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
@@ -134,7 +237,57 @@ body.dark {
             </div>
         </div>
     </header>
-    
+
+    <!-- O SVG é apenas para o filtro, então o escondemos -->
+    <svg class="svg-filter-hidden" xmlns="http://www.w3.org/2000/svg" version="1.1">
+        <defs>
+            <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo"></feColorMatrix>
+                <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+            </filter>
+        </defs>
+    </svg> 
+    <div id="backdrop" class="backdrop fixed inset-0 z-40 md:hidden"></div>
+
+    <div id="mobileMenu" class="mobile-menu fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 md:hidden">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+                        <i class="fas fa-car text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800">MuvisCar</h2>
+                        <p class="text-sm text-gray-600">Sistema de Locação</p>
+                    </div>
+                </div>
+                <button id="closeMobileMenu" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <nav class="space-y-4">
+                <a href="#" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-home text-lg"></i>
+                    <span class="font-medium">Início</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-car text-lg"></i>
+                    <span class="font-medium">Carros</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-users text-lg"></i>
+                    <span class="font-medium">Clientes</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 text-blue-600 bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
+                    <i class="fas fa-clipboard-list text-lg"></i>
+                    <span class="font-medium">Locações</span>
+                </a>
+            </nav>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <main class="container mx-auto mt-24 p-6">
@@ -398,54 +551,535 @@ body.dark {
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Container para Notificações -->
+    <div id="notificationContainer" class="fixed top-24 right-4 z-50 space-y-4"></div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/static/js/clientes.js"></script>
-</body>     
-</html>
-<script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const themeToggleBtn = document.getElementById('themeToggle');
-            const sunIcon = document.getElementById('sunIcon');
-            const moonIcon = document.getElementById('moonIcon');
-            const body = document.body;
+   <script>
+    // Configuração - AJUSTE ESTA URL CONFORME SEU BACKEND
+    let BASE_API_URL = 'http://localhost:8000';
+    // Garante que BASE_API_URL não termina com uma barra
+    if (BASE_API_URL.endsWith('/')) {
+        BASE_API_URL = BASE_API_URL.slice(0, -1);
+    }
 
-            // Função para aplicar o tema
-            function applyTheme(theme) {
-                if (theme === 'dark') {
-                    body.classList.add('dark');
-                    sunIcon.classList.remove('hidden');
-                    moonIcon.classList.add('hidden');
-                } else {
-                    body.classList.remove('dark');
-                    sunIcon.classList.add('hidden');
-                    moonIcon.classList.remove('hidden');
-                }
+    // Variáveis globais
+    let clients = [];
+
+    // DOM elements
+    const clientFormContainer = document.getElementById('clientFormContainer');
+    const addClientBtn = document.getElementById('addClientBtn');
+    const cancelFormBtn = document.getElementById('cancelFormBtn');
+    const clientForm = document.getElementById('clientForm');
+    const formTitle = document.getElementById('formTitle');
+    const clientTableBody = document.getElementById('clientTableBody');
+    const searchInput = document.getElementById('searchInput');
+    const typeFilter = document.getElementById('typeFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+    const saveClientBtn = document.getElementById('saveClientBtn');
+    const notificationContainer = document.getElementById('notificationContainer');
+
+    // Elementos do modal de detalhes do cliente
+    const clientDetailsModal = document.getElementById('clientDetailsModal');
+    const closeClientDetailsModal = document.getElementById('closeClientDetailsModal');
+    const clientDetailsContent = document.getElementById('clientDetailsContent');
+
+
+    // Form elements
+    const originalIdInput = document.getElementById('originalId');
+    const clientTypeSelect = document.getElementById('clientType');
+    const documentInput = document.getElementById('document');
+    const documentLabel = document.getElementById('documentLabel');
+    const nameInput = document.getElementById('name');
+    const nameLabel = document.getElementById('nameLabel');
+    const birthDateInput = document.getElementById('birthDate');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+    const passwordInput = document.getElementById('password');
+    const statusSelect = document.getElementById('status');
+    const zipCodeInput = document.getElementById('zipCode');
+    const addressInput = document.getElementById('address');
+    const cityInput = document.getElementById('city');
+    const stateSelect = document.getElementById('state');
+
+    // Error message elements
+    const clientTypeError = document.getElementById('clientTypeError');
+    const documentError = document.getElementById('documentError');
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const phoneError = document.getElementById('phoneError');
+    const passwordError = document.getElementById('passwordError');
+    const zipCodeError = document.getElementById('zipCodeError');
+    const stateError = document.getElementById('stateError');
+
+
+    // Notification system
+    function showNotification(message, type = 'info', duration = 5000) {
+        const notification = document.createElement('div');
+        notification.className = `notification px-6 py-4 rounded-lg shadow-lg text-white max-w-md ${
+            type === 'success' ? 'bg-green-500' :
+            type === 'error' ? 'bg-red-500' :
+            type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
+        }`;
+        
+        const icon = type === 'success' ? 'check-circle' :
+                        type === 'error' ? 'exclamation-circle' :
+                        type === 'warning' ? 'exclamation-triangle' : 'info-circle';
+        
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-${icon} mr-3"></i>
+                <span>${message}</span>
+                <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        
+        notificationContainer.appendChild(notification);
+        setTimeout(() => notification.classList.add('show'), 100);
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, duration);
+    }
+
+    // CPF/CNPJ validation functions
+    function validateCPF(cpf) {
+        cpf = cpf.replace(/[^\d]/g, '');
+        if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+        
+        let sum = 0;
+        for (let i = 0; i < 9; i++) {
+            sum += parseInt(cpf.charAt(i)) * (10 - i);
+        }
+        let checkDigit = 11 - (sum % 11);
+        if (checkDigit === 10 || checkDigit === 11) checkDigit = 0;
+        if (checkDigit !== parseInt(cpf.charAt(9))) return false;
+        
+        sum = 0;
+        for (let i = 0; i < 10; i++) {
+            sum += parseInt(cpf.charAt(i)) * (11 - i);
+        }
+        checkDigit = 11 - (sum % 11);
+        if (checkDigit === 10 || checkDigit === 11) checkDigit = 0;
+        return checkDigit === parseInt(cpf.charAt(10));
+    }
+
+    function validateCNPJ(cnpj) {
+        cnpj = cnpj.replace(/[^\d]/g, '');
+        if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
+        
+        const weights1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        const weights2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        
+        let sum = 0;
+        for (let i = 0; i < 12; i++) {
+            sum += parseInt(cnpj.charAt(i)) * weights1[i];
+        }
+        let checkDigit = sum % 11 < 2 ? 0 : 11 - (sum % 11);
+        if (checkDigit !== parseInt(cnpj.charAt(12))) return false;
+        
+        sum = 0;
+        for (let i = 0; i < 13; i++) {
+            sum += parseInt(cnpj.charAt(i)) * weights2[i];
+        }
+        checkDigit = sum % 11 < 2 ? 0 : 11 - (sum % 11);
+        return checkDigit === parseInt(cnpj.charAt(13));
+    }
+
+    // Input formatting functions
+    function formatCPF(value) {
+        value = value.replace(/\D/g, ''); // Garante que só tem dígitos
+        if (value.length > 11) value = value.slice(0, 11);
+        return value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    }
+
+    function formatCNPJ(value) {
+        value = value.replace(/\D/g, ''); // Garante que só tem dígitos
+        if (value.length > 14) value = value.slice(0, 14);
+        return value.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+    }
+
+    function formatPhone(value) {
+        const cleaned = value.replace(/\D/g, '');
+        if (cleaned.length === 11) {
+            return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+        } else if (cleaned.length === 10) {
+            return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+        }
+        return cleaned; // Retorna apenas dígitos se não formatável
+    }
+
+    function formatZipCode(value) {
+        value = value.replace(/\D/g, '');
+        if (value.length > 8) value = value.slice(0, 8);
+        return value.replace(/(\d{5})(\d{3})/, '$1-$2');
+    }
+
+    // Form handling
+    addClientBtn.addEventListener('click', () => {
+        clientForm.reset();
+        originalIdInput.value = '';
+        formTitle.innerHTML = '<i class="fas fa-user-plus mr-2"></i>Adicionar Cliente';
+        clientFormContainer.classList.remove('hidden');
+        clientFormContainer.classList.add('fade-in');
+        // Reset error messages
+        document.querySelectorAll('.error-message').forEach(el => el.classList.add('hidden'));
+        // Show password field for new client
+        passwordInput.closest('div').classList.remove('hidden');
+        passwordInput.required = true;
+    });
+
+    cancelFormBtn.addEventListener('click', () => {
+        clientFormContainer.classList.add('hidden');
+        clientFormContainer.classList.remove('fade-in');
+    });
+
+    clientForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Clear previous errors
+        document.querySelectorAll('.error-message').forEach(el => el.classList.add('hidden'));
+        let isValid = true;
+
+        const id = originalIdInput.value;
+        const clientType = clientTypeSelect.value;
+        const document = documentInput.value;
+        const name = nameInput.value;
+        const birthDate = birthDateInput.value;
+        const email = emailInput.value;
+        const phone = phoneInput.value;
+        const password = passwordInput.value;
+        const status = statusSelect.value;
+        const zipCode = zipCodeInput.value;
+        const address = addressInput.value;
+        const city = cityInput.value;
+        const state = stateSelect.value;
+
+        // Basic validation (can be expanded)
+        if (!clientType) {
+            clientTypeError.textContent = 'Selecione o tipo de cliente.';
+            clientTypeError.classList.remove('hidden');
+            isValid = false;
+        }
+
+        if (!document) {
+            documentError.textContent = 'CPF/CNPJ é obrigatório.';
+            documentError.classList.remove('hidden');
+            isValid = false;
+        } else {
+            const cleanDoc = document.replace(/[^\d]/g, '');
+            if (clientType === 'individual' && !validateCPF(cleanDoc)) {
+                documentError.textContent = 'CPF inválido.';
+                documentError.classList.remove('hidden');
+                isValid = false;
+            } else if (clientType === 'corporate' && !validateCNPJ(cleanDoc)) {
+                documentError.textContent = 'CNPJ inválido.';
+                documentError.classList.remove('hidden');
+                isValid = false;
+            } else if (clientType === '' && (cleanDoc.length !== 11 && cleanDoc.length !== 14)) {
+                documentError.textContent = 'CPF/CNPJ deve ter 11 ou 14 dígitos.';
+                documentError.classList.remove('hidden');
+                isValid = false;
             }
+        }
 
-            // Checar o tema salvo no localStorage ou preferência do sistema
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                applyTheme(savedTheme);
-            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                // Se não houver tema salvo, usar a preferência do sistema
-                applyTheme('dark');
-            } else {
-                applyTheme('light');
+        if (!name) {
+            nameError.textContent = 'Nome é obrigatório.';
+            nameError.classList.remove('hidden');
+            isValid = false;
+        }
+
+        if (!email) {
+            emailError.textContent = 'Email é obrigatório.';
+            emailError.classList.remove('hidden');
+            isValid = false;
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            emailError.textContent = 'Email inválido.';
+            emailError.classList.remove('hidden');
+            isValid = false;
+        }
+
+        if (!phone) {
+            phoneError.textContent = 'Telefone é obrigatório.';
+            phoneError.classList.remove('hidden');
+            isValid = false;
+        } else {
+            const cleanPhone = phone.replace(/[^\d]/g, '');
+            if (cleanPhone.length < 10 || cleanPhone.length > 11) {
+                phoneError.textContent = 'Telefone deve ter 10 ou 11 dígitos.';
+                phoneError.classList.remove('hidden');
+                isValid = false;
             }
+        }
 
-            // Adicionar evento de clique para alternar o tema
-            themeToggleBtn.addEventListener('click', () => {
-                if (body.classList.contains('dark')) {
-                    applyTheme('light');
-                    localStorage.setItem('theme', 'light');
-                } else {
-                    applyTheme('dark');
-                    localStorage.setItem('theme', 'dark');
-                }
+        // Validação da senha (apenas para criação de novo cliente)
+        if (id === '' && password.length < 6) {
+            passwordError.textContent = 'A senha deve ter no mínimo 6 caracteres.';
+            passwordError.classList.remove('hidden');
+            isValid = false;
+        }
+
+        if (zipCode && zipCode.replace(/[^\d]/g, '').length !== 8) {
+            zipCodeError.textContent = 'CEP deve ter 8 dígitos.';
+            zipCodeError.classList.remove('hidden');
+            isValid = false;
+        }
+
+        if (state && state.length !== 2) {
+            stateError.textContent = 'Estado deve ter 2 caracteres.';
+            stateError.classList.remove('hidden');
+            isValid = false;
+        }
+
+
+        if (!isValid) {
+            showNotification('Por favor, corrija os erros no formulário.', 'error');
+            return;
+        }
+
+        const clientData = {
+            nome: name,
+            email: email,
+            telefone: phone.replace(/[^\d]/g, ''),
+            cpf_cnpj: document.replace(/[^\d]/g, ''),
+            senha: password,
+            data_nascimento: birthDate ? new Date(birthDate).toISOString() : null,
+            endereco: address || null,
+            cidade: city || null,
+            estado: state || null,
+            cep: zipCode ? zipCode.replace(/[^\d]/g, '') : null,
+            ativo: status === 'active' ? true : false,
+        };
+
+        const url = id ? `${BASE_API_URL}/clientes/${id}` : `${BASE_API_URL}/clientes/`;
+        const method = id ? 'PUT' : 'POST';
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(clientData),
             });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.detail || 'Erro ao salvar cliente.');
+            }
+
+            showNotification(`Cliente ${id ? 'atualizado' : 'adicionado'} com sucesso!`, 'success');
+            clientFormContainer.classList.add('hidden');
+            clientFormContainer.classList.remove('fade-in');
+            fetchClients(); // Recarrega a lista
+        } catch (error) {
+            console.error('Erro:', error);
+            showNotification(error.message || 'Erro desconhecido ao salvar cliente.', 'error');
+        }
+    });
+
+    async function fetchClients() {
+        clientTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-500"><div class="loading-spinner"></div>Carregando clientes...</td></tr>`;
+        try {
+            const response = await fetch(`${BASE_API_URL}/clientes/`);
+            if (!response.ok) {
+                throw new Error('Erro ao buscar clientes.');
+            }
+            clients = await response.json();
+            renderClients(clients);
+        } catch (error) {
+            console.error('Erro ao buscar clientes:', error);
+            clientTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-red-500">Erro ao carregar clientes: ${error.message}</td></tr>`;
+            showNotification('Erro ao carregar clientes.', 'error');
+        }
+    }
+
+    function renderClients(clientList) {
+        clientTableBody.innerHTML = ''; // Limpa o corpo da tabela
+        if (clientList.length === 0) {
+            clientTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-500">Nenhum cliente encontrado.</td></tr>`;
+            return;
+        }
+
+        clientList.forEach(client => {
+            const row = document.createElement('tr');
+            row.className = 'border-b border-gray-200 hover:bg-gray-50';
+            
+            const statusText = client.ativo ? 'Ativo' : 'Inativo';
+            const statusClass = client.ativo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+            // Adicionado verificação para client.cpf_cnpj antes de acessar .length
+            const clientType = client.cpf_cnpj && client.cpf_cnpj.length === 11 ? 'Pessoa Física' :
+                               (client.cpf_cnpj && client.cpf_cnpj.length === 14 ? 'Pessoa Jurídica' : '-');
+
+            row.innerHTML = `
+                <td class="py-3 px-4">${client.id}</td>
+                <td class="py-3 px-4">${client.nome}</td>
+                <td class="py-3 px-4">${client.email}</td>
+                <td class="py-3 px-4">${client.telefone || '-'}</td>
+                <td class="py-3 px-4">${client.cpf_cnpj || '-'}</td>
+                <td class="py-3 px-4">${clientType}</td>
+                <td class="py-3 px-4"><span class="px-2 py-1 rounded-full text-xs font-semibold ${statusClass}">${statusText}</span></td>
+                <td class="py-3 px-4 text-center">
+                    <div class="flex items-center justify-center space-x-2">
+                        <button class="view-details-btn text-blue-600 hover:text-blue-800 transition duration-300" data-id="${client.id}" title="Ver Detalhes">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                        <button class="edit-btn text-blue-600 hover:text-blue-800 transition duration-300" data-id="${client.id}" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="delete-btn text-red-600 hover:text-red-800 transition duration-300" data-id="${client.id}" title="Excluir">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            clientTableBody.appendChild(row);
         });
-    </script>
+
+        // Add event listeners for edit and delete buttons
+        document.querySelectorAll('.view-details-btn').forEach(button => {
+            button.addEventListener('click', (e) => showClientDetailsModal(parseInt(e.currentTarget.dataset.id)));
+        });
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', (e) => editClient(parseInt(e.currentTarget.dataset.id)));
+        });
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', (e) => deleteClient(parseInt(e.currentTarget.dataset.id)));
+        });
+    }
+
+    // Função de edição do cliente
+    function editClient(id) {
+        const client = clients.find(c => c.id === id);
+        if (!client) {
+            showNotification('Cliente não encontrado para edição.', 'error');
+            return;
+        }
+
+        originalIdInput.value = client.id;
+        formTitle.innerHTML = `<i class="fas fa-user-edit mr-2"></i>Editar Cliente (ID: ${client.id})`;
+        
+        // Preencher o formulário com os dados do cliente
+        if (client.cpf_cnpj) {
+            clientTypeSelect.value = client.cpf_cnpj.length === 11 ? 'individual' : 'corporate';
+        } else {
+            clientTypeSelect.value = '';
+        }
+        documentInput.value = client.cpf_cnpj || '';
+        nameInput.value = client.nome || '';
+        birthDateInput.value = client.data_nascimento ? new Date(client.data_nascimento).toISOString().split('T')[0] : '';
+        emailInput.value = client.email || '';
+        phoneInput.value = client.telefone || '';
+        statusSelect.value = client.ativo ? 'active' : 'inactive';
+        zipCodeInput.value = client.cep || '';
+        addressInput.value = client.endereco || '';
+        cityInput.value = client.cidade || '';
+        stateSelect.value = client.estado || '';
+
+        // Esconder o campo de senha para edição, pois a senha não deve ser editada assim
+        passwordInput.closest('div').classList.add('hidden');
+        passwordInput.required = false;
+
+        clientFormContainer.classList.remove('hidden');
+        clientFormContainer.classList.add('fade-in');
+        // Reset error messages
+        document.querySelectorAll('.error-message').forEach(el => el.classList.add('hidden'));
+    }
+
+    // Função para deletar cliente (com SweetAlert2)
+    async function deleteClient(id) {
+        Swal.fire({
+            title: 'Excluir cliente?',
+            text: 'Esta ação não pode ser desfeita. Você realmente deseja desativar este cliente?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sim, Deletar!',
+            cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`${BASE_API_URL}/clientes/${id}`, {
+                        method: 'DELETE',
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail || 'Erro ao desativar cliente.');
+                    }
+
+                    showNotification('Cliente desativado com sucesso!', 'success');
+                    fetchClients(); // Recarrega a lista
+                } catch (error) {
+                    console.error('Erro ao desativar cliente:', error);
+                    showNotification(error.message || 'Erro desconhecido ao desativar cliente.', 'error');
+                }
+            }
+        });
+    }
+
+    // Função para exibir o modal de detalhes do cliente
+    function showClientDetailsModal(id) {
+        const client = clients.find(c => c.id === id);
+        if (!client) {
+            showNotification('Cliente não encontrado.', 'error');
+            return;
+        }
+
+        const clientType = client.cpf_cnpj && client.cpf_cnpj.length === 11 ? 'Pessoa Física' :
+                           (client.cpf_cnpj && client.cpf_cnpj.length === 14 ? 'Pessoa Jurídica' : '-');
+        const statusText = client.ativo ? 'Ativo' : 'Inativo';
+
+        clientDetailsContent.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div><strong>ID:</strong> ${client.id || '-'}</div>
+                <div><strong>Nome:</strong> ${client.nome || '-'}</div>
+                <div><strong>Email:</strong> ${client.email || '-'}</div>
+                <div><strong>Telefone:</strong> ${client.telefone || '-'}</div>
+                <div><strong>CPF/CNPJ:</strong> ${client.cpf_cnpj || '-'}</div>
+                <div><strong>Tipo:</strong> ${clientType}</div>
+                <div><strong>Data Nasc./Fund.:</strong> ${client.data_nascimento ? new Date(client.data_nascimento).toISOString().split('T')[0] : '-'}</div>
+                <div><strong>Endereço:</strong> ${client.endereco || '-'}</div>
+                <div><strong>Cidade:</strong> ${client.cidade || '-'}</div>
+                <div><strong>Estado:</strong> ${client.estado || '-'}</div>
+                <div><strong>CEP:</strong> ${client.cep || '-'}</div>
+                <div><strong>Status:</strong> ${statusText}</div>
+                <div><strong>Data Criação:</strong> ${new Date(client.data_criacao).toLocaleDateString()}</div>
+                <div><strong>Última Atualização:</strong> ${client.data_atualizacao ? new Date(client.data_atualizacao).toLocaleDateString() : '-'}</div>
+            </div>
+        `;
+        clientDetailsModal.classList.remove('hidden');
+    }
+
+    // Event listener para fechar o modal de detalhes do cliente
+    closeClientDetailsModal.addEventListener('click', () => {
+        clientDetailsModal.classList.add('hidden');
+    });
+
+    // Initial fetch
+    fetchClients();
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const backdrop = document.getElementById('backdrop');
+
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            backdrop.classList.toggle('active');
+        });
+    }
+
+    if (backdrop) {
+        backdrop.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            backdrop.classList.remove('active');
+        });
+    }
+</script>
 </body>
 </html>

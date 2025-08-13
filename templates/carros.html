@@ -1,77 +1,151 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MuvisCar - Sistema Integrado</title>
+    <title>MuvisCar - Sistema de Locação Avançado</title>
     
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="static/css/carros.css">
-<style>
-/* Estilos do tema escuro - VERSÃO MAIS CLARA E TRANSPARENTE */
-body.dark {
-    background-color: #082338; /* Fundo principal: um cinza escuro mais claro */
-    color:  #082338; /* Cor do texto principal: um branco suave */
-}
-.dark .glass-effect {
-    background:  #082338(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px); 
-    border: 1px solid  #082338(255, 255, 255, 0.15);
-    color:  #082338;
-}
-.dark .text-gray-800 { color: #f0f0f0; } 
-.dark .text-gray-700 { color: #e0e0e0; }
-.dark .text-gray-600 { color: #a0a0a0; }
-.dark .bg-gray-100 { background-color:  #082338; } /* Fundo de elementos: cinza mais claro */
-.dark .hover\:bg-gray-200:hover { background-color:  #082338; }
-.dark .border-gray-200 { border-color:  #082338; }
-.dark .bg-white { background-color:  #082338; } /* Fundo de elementos brancos: cinza escuro mais claro */
-.dark .hover\:bg-gray-100:hover { background-color:  #082338; }
+    <link rel="stylesheet" href="static/css/home.css">
+    <style>
+        /* Estilos do tema escuro */
+        body.dark {
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+        .dark .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #E0E0E0;
+        }
+        .dark .text-gray-800 { color: #E0E0E0; }
+        .dark .text-gray-700 { color: #B0B0B0; }
+        .dark .text-gray-600 { color: #808080; }
+        .dark .bg-gray-100 { background-color: #2D2D2D; }
+        .dark .hover\:bg-gray-200:hover { background-color: #3D3D3D; }
+        .dark .border-gray-200 { border-color: #444444; }
+        .dark .bg-white { background-color: #1E1E1E; }
+        .dark .hover\:bg-gray-100:hover { background-color: #282828; }
+        /* Estilo para os cards de carro */
+        .dark .car-card {
+            background-color: #1E1E1E; 
+            border: 1px solid #333; 
+        }
+        .dark .car-card .shadow-lg {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); 
+        }
+        .dark .car-card .hover\:shadow-2xl:hover {
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+        }
+        /* Estilo para o card de filtro no tema escuro */
+        .dark .filter-card {
+            background-color: #1E1E1E;
+            border: 1px solid #333;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .dark .search-input,
+        .dark .filter-card select {
+            background-color: #2D2D2D;
+            color: #E0E0E0;
+            border-color: #444444;
+        }
+        .dark .search-input::placeholder {
+            color: #808080;
+        }
+        .dark .bg-gray-600 {
+            background-color: #444444;
+        }
+        .dark .bg-gray-600:hover {
+            background-color: #555555;
+        }
 
-/* Estilo para os cards de carro e filtro - AGORA TRANSPARENTE E UNIFICADO */
-.dark .car-card,
-.dark .filter-card {
-    background: rgba(255, 255, 255, 0.08); /* Fundo semi-transparente para ambos */
-    backdrop-filter: blur(12px); /* Efeito de vidro borrado */
-    border: 1px solid rgba(255, 255, 255, 0.15); 
-}
-.dark .car-card .shadow-lg {
-    box-shadow: 0 4px 8px rgba(34, 34, 34, 0.185); 
-}
-.dark .car-card .hover\:shadow-2xl:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.185);
-}
+        /* ----- ESTILOS DO NOVO BLOB BUTTON ----- */
+        .blob-btn {
+            text-decoration: none;
+            position: relative;
+            padding: 8px 12px;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: 400;
+            color: #4B5563; /* Cor do texto padrão */
+            transition: color 0.3s ease;
+            z-index: 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            border-radius: 9999px; /* Adicionado para borda arredondada */
+            border: 2px solid transparent; /* Adicionado para hover de borda */
+        }
+        .blob-btn:hover {
+            color: #fff;
+            border-color: #2563EB; /* Cor da borda no hover */
+        }
+        .dark .blob-btn {
+            color: #D1D5DB;
+        }
+        .dark .blob-btn:hover {
+            color: #121212;
+            border-color: #60A5FA; /* Cor da borda no hover para modo escuro */
+        }
+        .blob-btn__inner {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            overflow: hidden;
+            border-radius: 9999px;
+            filter: url(#goo);
+        }
+        .blob-btn__blobs {
+            position: relative;
+            display: block;
+            height: 100%;
+            filter: url(#goo);
+        }
+        .blob-btn__blob {
+            position: absolute;
+            top: 2px;
+            width: 25%;
+            height: 100%;
+            background: #2563EB; /* Cor do blob em modo claro */
+            border-radius: 100%;
+            transform: translate3d(0, 150%, 0) scale(1.7);
+            transition: transform 0.45s ease;
+        }
+        .blob-btn__blob:nth-child(1) { left: 0; transition-delay: 0s; }
+        .blob-btn__blob:nth-child(2) { left: 30%; transition-delay: 0.08s; }
+        .blob-btn__blob:nth-child(3) { left: 60%; transition-delay: 0.16s; }
+        .blob-btn__blob:nth-child(4) { left: 90%; transition-delay: 0.24s; }
+        .blob-btn:hover .blob-btn__blob {
+            transform: translate3d(0, 0%, 0) scale(1.7);
+        }
+        .dark .blob-btn__blob {
+            background: #60A5FA; /* Cor do blob em modo escuro */
+        }
 
-/* Estilo para o card de filtro no tema escuro - Sombras */
-.dark .filter-card {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.185);
-}
-.dark .search-input,
-.dark .filter-card select {
-    background-color: #333333; /* Fundo do input e select mais claro */
-    color: #f0f0f0;
-    border-color: #555555;
-}
-.dark .search-input::placeholder {
-    color: #a0a0a0;
-}
-.dark .bg-gray-600 {
-    background-color: #555555;
-}
-.dark .bg-gray-600:hover {
-    background-color: #666666;
-}
-</style>
+        .svg-filter-hidden {
+            position: absolute;
+            width: 0;
+            height: 0;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <!-- Header -->
-    <header class="bg-white shadow-lg fixed w-full top-0 z-50">
+<body class="transition-colors duration-500">
+    
+    
+    <header class="glass-effect shadow-lg fixed w-full top-0 z-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 
-                <!-- Logo -->
                 <div class="flex items-center space-x-3">
                     <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg logo-animation">
                         <i class="fas fa-car text-white text-2xl"></i>
@@ -82,42 +156,80 @@ body.dark {
                     </div>
                 </div>
                 
-                <!-- Desktop Navigation -->
                 <nav class="hidden md:flex items-center space-x-8">
-                    <a href="/home" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
-                        <i class="fas fa-home mr-2"></i>Início
+                    <a href="/home" class="blob-btn">
+                        <i class="fas fa-home mr-2"></i>
+                        <span class="font-medium">Início</span>
+                        <span class="blob-btn__inner">
+                            <span class="blob-btn__blobs">
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                            </span>
+                        </span>
                     </a>
-                    <a href="/carros" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-3 transition duration-300">
-                    <i class="fas fa-car text-lg"></i>
-                    <span class="font-medium">Carros</span>
-                </a>
-                    <a href="/clientes" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
-                        <i class="fas fa-users mr-2"></i>Clientes
+                    <a href="/carros" class="blob-btn">
+                        <i class="fas fa-car mr-2"></i>
+                        <span class="font-medium">Carros</span>
+                        <span class="blob-btn__inner">
+                            <span class="blob-btn__blobs">
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                            </span>
+                        </span>
                     </a>
-                    <a href="/locacoes" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
-                        <i class="fas fa-clipboard-list mr-2"></i>Locações
+                    <a href="/clientes" class="blob-btn">
+                        <i class="fas fa-users mr-2"></i>
+                        <span class="font-medium">Clientes</span>
+                        <span class="blob-btn__inner">
+                            <span class="blob-btn__blobs">
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                            </span>
+                        </span>
+                    </a>
+                    <a href="/locacoes" class="blob-btn">
+                        <i class="fas fa-clipboard-list mr-2"></i>
+                        <span class="font-medium">Locações</span>
+                        <span class="blob-btn__inner">
+                            <span class="blob-btn__blobs">
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                            </span>
+                        </span>
                     </a>
                 </nav>
-                <button id="themeToggle" class="p-2 rounded-lg transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+                
+                <div class="flex items-center space-x-4">
+                    <button id="themeToggle" class="p-2 rounded-lg transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-700">
                         <i id="sunIcon" class="fas fa-sun text-gray-500 dark:text-yellow-400 hidden"></i>
                         <i id="moonIcon" class="fas fa-moon text-gray-500 dark:text-gray-400"></i>
                     </button>
-                <!-- User Profile & Mobile Menu Button -->
-                <div class="flex items-center space-x-4">
-                    <!-- User Profile (Desktop) -->
-                    <div class="hidden md:flex items-center space-x-3">
-                        <div class="relative">
-                            <!-- <button class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 rounded-lg px-3 py-2 transition duration-300">
-                                <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-user text-white text-sm"></i>
-                                </div>
-                                <span class="text-gray-700 font-medium">Admin</span>
-                                <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
-                            </button> -->
+                    
+                    <div class="relative">
+                         <!-- Botão de perfil agora sem o estilo blob -->
+                        <button id="profileButton" class="flex items-center space-x-2 bg-white-100 hover:bg-white-200 rounded-lg px-3 py-2 transition duration-300">
+                            <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-white text-sm"></i>
+                            </div>
+                            <span class="text-white-700 font-medium">Admin</span>
+                            <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+                        </button>
+                        
+                        <div id="dropdownMenu" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg hidden">
+                            <a href="/login" id="loginButton" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logar</a>
+                            <a href="#" id="logoutButton" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sair</a>
+                            <a href="#" id="logoutButton" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Administrador</a>
                         </div>
                     </div>
                     
-                    <!-- Mobile Menu Button -->
                     <button id="mobileMenuBtn" class="md:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
@@ -125,8 +237,17 @@ body.dark {
             </div>
         </div>
     </header>
-    
-    <!-- Mobile Menu -->
+
+    <!-- O SVG é apenas para o filtro, então o escondemos -->
+    <svg class="svg-filter-hidden" xmlns="http://www.w3.org/2000/svg" version="1.1">
+        <defs>
+            <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo"></feColorMatrix>
+                <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+            </filter>
+        </defs>
+    </svg>  
     <div id="backdrop" class="backdrop fixed inset-0 z-40 md:hidden"></div>
     <div id="mobileMenu" class="mobile-menu fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 md:hidden">
         <div class="p-6">
@@ -145,8 +266,7 @@ body.dark {
                 </button>
             </div>
             
-            <!-- Desktop Navigation -->
-                <nav class="hidden md:flex items-center space-x-8">
+            <nav class="hidden md:flex items-center space-x-8">
                     <a href="/home" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-3 py-2">
                         <i class="fas fa-home mr-2"></i>Início
                     </a>
@@ -163,11 +283,9 @@ body.dark {
         </div>
     </div>
     
-    <!-- Main Content -->
     <main class="pt-20 min-h-screen">
         <div class="container mx-auto px-4 py-8">
             
-            <!-- Breadcrumb -->
             <nav class="mb-6">
                 <ol class="flex items-center space-x-2 text-sm text-gray-600">
                     <li><a href="#dashboard" class="hover:text-blue-600 transition duration-300">Dashboard</a></li>
@@ -176,7 +294,6 @@ body.dark {
                 </ol>
             </nav>
 
-            <!-- Page Header -->
             <div class="mb-8">
                 <h2 class="text-4xl font-bold text-gray-800 mb-2">
                     <i class="fas fa-car text-blue-600 mr-3"></i>
@@ -185,11 +302,9 @@ body.dark {
                 <p class="text-gray-600">Gerencie sua frota de veículos com integração completa ao backend</p>
             </div>
 
-            <!-- Controls Panel -->
             <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
                 <div class="flex flex-col space-y-6">
                     
-                    <!-- Search and Status Filter Row -->
                     <div class="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0 lg:space-x-4">
                         <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 flex-1">
                             <div class="relative flex-1 max-w-md">
@@ -219,7 +334,6 @@ body.dark {
                         </div>
                     </div>
 
-                    <!-- Advanced Filters Row -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -258,7 +372,6 @@ body.dark {
                 </div>
             </div>
 
-            <!-- Car Form Modal -->
             <div id="carFormModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
                 <div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-screen overflow-y-auto">
                     <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-xl">
@@ -277,7 +390,6 @@ body.dark {
                         <input type="hidden" id="editMode">
                         
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <!-- Left Column -->
                             <div class="space-y-4">
                                 <h4 class="text-lg font-semibold text-gray-700 border-b pb-2 flex items-center">
                                     <i class="fas fa-info-circle text-blue-500 mr-2"></i>
@@ -315,8 +427,8 @@ body.dark {
                                             Ano <span class="text-red-500">*</span>
                                         </label>
                                         <input type="number" id="year" name="year" required min="1990" max="2030"
-                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                 placeholder="2024">
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="2024">
                                         <div id="yearError" class="text-red-500 text-sm mt-1 hidden"></div>
                                     </div>
                                     <div>
@@ -325,12 +437,68 @@ body.dark {
                                             Quilometragem <span class="text-red-500">*</span>
                                         </label>
                                         <input type="number" id="mileage" name="mileage" required min="0"
-                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                 placeholder="50000">
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="50000">
                                         <div id="mileageError" class="text-red-500 text-sm mt-1 hidden"></div>
                                     </div>
                                 </div>
-
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="transmission" class="block text-sm font-medium text-gray-700 mb-2">
+                                            <i class="fas fa-cogs text-blue-500 mr-1"></i>
+                                            Transmissão <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="transmission" name="transmission" required
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                            <option value="">Selecione a Transmissão</option>
+                                            <option value="AUTOMATICA">Automática</option>
+                                            <option value="MANUAL">Manual</option>
+                                        </select>
+                                        <div id="transmissionError" class="text-red-500 text-sm mt-1 hidden"></div>
+                                    </div>
+                                    <div>
+                                        <label for="fuel" class="block text-sm font-medium text-gray-700 mb-2">
+                                            <i class="fas fa-gas-pump text-blue-500 mr-1"></i>
+                                            Combustível <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="fuel" name="fuel" required
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                            <option value="">Selecione o Combustível</option>
+                                            <option value="GASOLINA">Gasolina</option>
+                                            <option value="ETANOL">Etanol</option>
+                                            <option value="FLEX">Flex</option>
+                                            <option value="DIESEL">Diesel</option>
+                                            <option value="ELETRICO">Elétrico</option>
+                                            <option value="HIBRIDO">Híbrido</option>
+                                        </select>
+                                        <div id="fuelError" class="text-red-500 text-sm mt-1 hidden"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="passengers" class="block text-sm font-medium text-gray-700 mb-2">
+                                            <i class="fas fa-user-friends text-blue-500 mr-1"></i>
+                                            Passageiros <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="number" id="passengers" name="passengers" required min="1" max="10"
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="5">
+                                        <div id="passengersError" class="text-red-500 text-sm mt-1 hidden"></div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label for="horsepower" class="block text-sm font-medium text-gray-700 mb-2">
+                                            <i class="fas fa-horse text-blue-500 mr-1"></i>
+                                            Potência (HP)
+                                        </label>
+                                        <input type="number" id="horsepower" name="horsepower" min="1"
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="150">
+                                    </div>
+                                </div>
+                                
                                 <div>
                                     <label for="color" class="block text-sm font-medium text-gray-700 mb-2">
                                         <i class="fas fa-palette text-blue-500 mr-1"></i>
@@ -356,7 +524,6 @@ body.dark {
                                 </div>
                             </div>
                             
-                            <!-- Right Column -->
                             <div class="space-y-4">
                                 <h4 class="text-lg font-semibold text-gray-700 border-b pb-2 flex items-center">
                                     <i class="fas fa-dollar-sign text-blue-500 mr-2"></i>
@@ -370,14 +537,14 @@ body.dark {
                                             Categoria <span class="text-red-500">*</span>
                                         </label>
                                         <select id="carCategory" name="category" required
-                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                                      <option value="">Selecione a Categoria</option>
                                                      <option value="ECONOMICO">Econômico</option>
                                                      <option value="INTERMEDIARIO">Intermediário</option>
                                                      <option value="LUXO">Luxo</option>
                                                      <option value="SUV">SUV</option>
                                                      <option value="ESPORTIVO">Esportivo</option>
-                                         </select>
+                                        </select>
                                         <div id="categoryError" class="text-red-500 text-sm mt-1 hidden"></div>
                                     </div>
                                     
@@ -387,8 +554,8 @@ body.dark {
                                             Diária (R$) <span class="text-red-500">*</span>
                                         </label>
                                         <input type="number" id="dailyRate" name="dailyRate" required step="0.01" min="0"
-                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                 placeholder="120.50">
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="120.50">
                                         <div id="dailyRateError" class="text-red-500 text-sm mt-1 hidden"></div>
                                     </div>
                                 </div>
@@ -448,7 +615,6 @@ body.dark {
                 </div>
             </div>
 
-            <!-- Cars Table -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden">
                 <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
                     <div class="flex items-center justify-between">
@@ -491,7 +657,6 @@ body.dark {
                             </tr>
                         </thead>
                         <tbody id="carsTableBody" class="bg-white divide-y divide-gray-200">
-                            <!-- Carros serão carregados aqui via JavaScript -->
                             <tr>
                                 <td colspan="7" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
                                     <div id="loadingMessage" class="flex items-center justify-center text-blue-600 font-medium">
@@ -504,6 +669,7 @@ body.dark {
                         </tbody>
                     </table>
                 </div>
+                <div id="carDetailsModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
             </div>
         </div>
     </main>
@@ -514,8 +680,24 @@ body.dark {
 
     <!-- JavaScript Personalizado -->
     <script src="static/js/carros.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
  <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const profileButton = document.getElementById('profileButton');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            profileButton.addEventListener('click', function () {
+                dropdownMenu.classList.toggle('hidden');
+            });
+
+            // Opcional: fechar o menu se clicar fora
+            document.addEventListener('click', function (event) {
+                const isClickInside = profileButton.contains(event.target) || dropdownMenu.contains(event.target);
+                if (!isClickInside) {
+                    dropdownMenu.classList.add('hidden');
+                }
+            });
+        });
         document.addEventListener('DOMContentLoaded', () => {
             const themeToggleBtn = document.getElementById('themeToggle');
             const sunIcon = document.getElementById('sunIcon');

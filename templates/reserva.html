@@ -1,0 +1,608 @@
+<!-- <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva Rápida e Contato</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Novo CSS para o vídeo de fundo */
+        .video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            background-size: cover;
+            overflow: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .input-glow:focus {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1), 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .car-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: translateY(0);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .car-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .pulse-ring {
+            animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(.33); }
+            80%, 100% { opacity: 0; }
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .booking-item {
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .divider-gradient {
+            background: linear-gradient(to bottom, transparent, rgba(102, 126, 234, 0.3), transparent);
+        }
+
+        .contact-icon {
+            transition: all 0.3s ease;
+        }
+
+        .contact-icon:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 relative overflow-x-hidden">
+    <video class="video-background" autoplay muted loop playsinline webkit-playsinline>
+        <source src="static/videos/backgroud.mp4" type="video/mp4">
+        Seu navegador não suporta vídeos HTML5.
+    </video>
+
+    <div class="fixed top-20 left-10 w-20 h-20 bg-white opacity-10 rounded-full floating-element" style="animation-delay: 0s;"></div>
+    <div class="fixed top-40 right-20 w-16 h-16 bg-white opacity-10 rounded-full floating-element" style="animation-delay: 2s;"></div>
+    <div class="fixed bottom-40 left-20 w-12 h-12 bg-white opacity-10 rounded-full floating-element" style="animation-delay: 4s;"></div>
+
+    <div class="flex items-start justify-center min-h-screen py-8">
+        <div class="glass-card p-8 rounded-3xl shadow-2xl max-w-7xl w-full flex flex-col xl:flex-row gap-12">
+            <div class="flex-1 space-y-8">
+                <div class="text-center xl:text-left">
+                    <h1 id="booking-title" class="text-5xl font-bold gradient-text mb-4 leading-tight">
+                        Reserva Rápida
+                    </h1>
+                    <p class="text-gray-600 text-lg">
+                        Transforme sua experiência de mobilidade em segundos
+                    </p>
+                </div>
+
+                <div class="space-y-4">
+                    <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+                        <span class="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full mr-3"></span>
+                        Selecione seu Veículo
+                    </h2>
+
+                    <div id="car-card" 
+                         class="car-card cursor-pointer p-6 rounded-2xl text-white relative overflow-hidden"
+                         data-car='{"brand":"Fiat","model":"Mobi","year":"2023"}'>
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-2xl font-bold mb-2"></p>
+                                    <p class="text-white/80 mb-4"></p>
+                                    <div class="flex items-center text-sm text-white/60">
+                                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                        </svg>
+                                        Clique para selecionar
+                                    </div>
+                                </div>
+                                <div class="text-4xl">🚗</div>
+                            </div>
+                        </div>
+                        <div class="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full"></div>
+                    </div>
+                </div>
+
+                <form id="booking-form" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label for="booking-name" class="block text-sm font-semibold text-gray-700">
+                                Seu Nome
+                            </label>
+                            <input type="text" id="booking-name" name="name" required
+                                   class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 transition-all duration-300 input-glow">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="booking-contact" class="block text-sm font-semibold text-gray-700">
+                                Email ou Telefone
+                            </label>
+                            <input type="text" id="booking-contact" name="contact" required
+                                   class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 transition-all duration-300 input-glow">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="booking-message" class="block text-sm font-semibold text-gray-700">
+                            Detalhes da Reserva
+                        </label>
+                        <textarea id="booking-message" name="message" rows="4" required
+                                  class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 transition-all duration-300 input-glow resize-none"></textarea>
+                    </div>
+
+                    <button type="submit" id="submit-booking-btn"
+                            class="submit-btn w-full py-4 px-8 text-white font-bold rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+                        <span class="relative z-10 flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V15a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                            Enviar Solicitação
+                        </span>
+                    </button>
+                </form>
+
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+                            <span class="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-600 rounded-full mr-3 flex items-center justify-center">
+                                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                                </svg>
+                            </span>
+                            Reservas Recebidas
+                        </h2>
+                        <div id="loading-indicator-booking" class="text-indigo-600 hidden">
+                            <div class="flex items-center">
+                                <div class="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin mr-2"></div>
+                                <span class="text-sm">Carregando...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="bookings-list" class="space-y-4">
+                        <div id="no-bookings-message" class="text-center py-12">
+                            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2v1a1 1 0 102 0V3h2v1a1 1 0 102 0V3a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2.5 7a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm2.45.707a1 1 0 001.414-1.414L9.914 10.5l.45-.45a1 1 0 00-1.414-1.414L8.5 9.086l-.45-.45a1 1 0 00-1.414 1.414l.45.45-.45.45a1 1 0 001.414 1.414L8.5 11.5l.45.45z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <p class="text-gray-500 font-medium">Nenhuma reserva encontrada</p>
+                            <p class="text-gray-400 text-sm mt-1">As reservas aparecerão aqui em tempo real</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hidden xl:block w-px divider-gradient"></div>
+
+            <div class="flex-1 space-y-8">
+                <div class="text-center xl:text-left">
+                    <h1 class="text-5xl font-bold gradient-text mb-4 leading-tight">
+                        Fale Conosco
+                    </h1>
+                    <p class="text-gray-600 text-lg">
+                        Estamos aqui para ajudar com qualquer dúvida
+                    </p>
+                </div>
+
+                <form id="contact-form" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label for="contact-name" class="block text-sm font-semibold text-gray-700">
+                                Seu Nome
+                            </label>
+                            <input type="text" id="contact-name" name="name" required
+                                   class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 transition-all duration-300 input-glow">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="contact-email" class="block text-sm font-semibold text-gray-700">
+                                Seu Email
+                            </label>
+                            <input type="email" id="contact-email" name="email" required
+                                   class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 transition-all duration-300 input-glow">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="contact-message" class="block text-sm font-semibold text-gray-700">
+                            Sua Mensagem
+                        </label>
+                        <textarea id="contact-message" name="message" rows="5" required
+                                  class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 transition-all duration-300 input-glow resize-none"></textarea>
+                    </div>
+
+                    <button type="submit" id="submit-contact-btn"
+                            class="submit-btn w-full py-4 px-8 text-white font-bold rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+                        <span class="relative z-10 flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" clip-rule="evenodd"/>
+                                <path fill-rule="evenodd" d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" clip-rule="evenodd"/>
+                            </svg>
+                            Enviar Mensagem
+                        </span>
+                    </button>
+                </form>
+
+                <div class="bg-gradient-to-r from-gray-50 to-gray-100 p-8 rounded-2xl">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">
+                        Contato Direto
+                    </h2>
+                    <p class="text-gray-600 text-center mb-6">
+                        Prefere falar conosco diretamente?
+                    </p>
+
+                    <div class="space-y-4">
+                        <a href="tel:+5548988190447" 
+                           class="flex items-center justify-center p-4 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 group">
+                            <div class="contact-icon w-12 h-12 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.774a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.06-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.147 18 3 13.853 3 8V6a1 1 0 011-1h2z"/>
+                                </svg>
+                            </div>
+                            <div class="text-left">
+                                <p class="font-semibold text-gray-800 group-hover:text-green-600 transition-colors">
+                                    (48) 988190447
+                                </p>
+                                <p class="text-sm text-gray-500">Ligue agora</p>
+                            </div>
+                        </a>
+
+                        <a href="mailto:muvescar.sc@outlook.com" 
+                           class="flex items-center justify-center p-4 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 group">
+                            <div class="contact-icon w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                                </svg>
+                            </div>
+                            <div class="text-left">
+                                <p class="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+                                    muvescar.sc@outlook.com
+                                </p>
+                                <p class="text-sm text-gray-500">Envie um email</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full transform scale-95 transition-all duration-300">
+            <div class="text-center">
+                <div class="relative inline-flex items-center justify-center w-20 h-20 mx-auto mb-6">
+                    <div class="absolute w-20 h-20 bg-green-500 rounded-full opacity-25 pulse-ring"></div>
+                    <div class="relative w-16 h-16 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <h3 id="modal-title" class="text-2xl font-bold text-gray-900 mb-4">
+                    Solicitação Enviada!
+                </h3>
+
+                <p id="modal-message" class="text-gray-600 mb-8 leading-relaxed">
+                    Obrigado! Sua solicitação foi recebida com sucesso. Em breve entraremos em contato.
+                </p>
+
+                <button id="close-modal" 
+                        class="submit-btn px-8 py-3 text-white font-semibold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                    <span class="relative z-10">Fechar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Importa as funções necessárias do Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables provided by the Canvas environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const bookingForm = document.getElementById('booking-form');
+            const contactForm = document.getElementById('contact-form');
+            const carCard = document.getElementById('car-card');
+            const submitBookingBtn = document.getElementById('submit-booking-btn');
+            const submitContactBtn = document.getElementById('submit-contact-btn');
+            const modal = document.getElementById('success-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const closeModalBtn = document.getElementById('close-modal');
+            const bookingsList = document.getElementById('bookings-list');
+            const loadingIndicatorBooking = document.getElementById('loading-indicator-booking');
+            const noBookingsMessage = document.getElementById('no-bookings-message');
+
+            let db;
+            let auth;
+
+            // Função para criar card de reserva com animação
+            function createBookingCard(booking) {
+                const bookingCard = document.createElement('div');
+                bookingCard.className = 'booking-item bg-white p-6 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100';
+                const timestamp = booking.timestamp ? new Date(booking.timestamp.seconds * 1000).toLocaleString('pt-BR') : 'Data não disponível';
+                
+                bookingCard.innerHTML = `
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-bold text-lg">${booking.name.charAt(0).toUpperCase()}</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-lg font-semibold text-gray-900 truncate">${booking.name}</h4>
+                                <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">Nova</span>
+                            </div>
+                            <p class="text-sm text-indigo-600 mb-2">${booking.contact}</p>
+                            <p class="text-gray-700 mb-3 line-clamp-3">${booking.message}</p>
+                            <div class="flex items-center text-xs text-gray-500">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                </svg>
+                                ${timestamp}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return bookingCard;
+            }
+
+            // Função para animar modal
+            function showModal() {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.querySelector('div > div').classList.add('scale-100');
+                    modal.querySelector('div > div').classList.remove('scale-95');
+                }, 10);
+            }
+
+            function hideModal() {
+                modal.querySelector('div > div').classList.add('scale-95');
+                modal.querySelector('div > div').classList.remove('scale-100');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+            } catch (error) {
+                console.error("Erro ao inicializar o Firebase:", error);
+                bookingsList.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <p class="text-red-500 font-medium">Erro ao carregar o sistema</p>
+                    </div>
+                `;
+                return;
+            }
+
+            if (db && auth) {
+                // Event Listeners
+                carCard.addEventListener('click', () => {
+                    const carData = JSON.parse(carCard.dataset.car);
+                    const bookingTitle = document.getElementById('booking-title');
+                    const bookingMessage = document.getElementById('booking-message');
+
+                    bookingTitle.innerText = `Reserva para o ${carData.model}`;
+                    bookingMessage.value = `Gostaria de reservar o carro ${carData.brand} ${carData.model} (${carData.year}).`;
+                    
+                    // Scroll suave para o formulário
+                    bookingForm.scrollIntoView({ behavior: 'smooth' });
+                });
+
+                bookingForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    
+                    const originalText = submitBookingBtn.innerHTML;
+                    submitBookingBtn.disabled = true;
+                    submitBookingBtn.innerHTML = `
+                        <span class="relative z-10 flex items-center justify-center">
+                            <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                            Enviando...
+                        </span>
+                    `;
+
+                    const bookingData = {
+                        name: bookingForm.name.value,
+                        contact: bookingForm.contact.value,
+                        message: bookingForm.message.value,
+                        timestamp: serverTimestamp(),
+                        type: 'booking'
+                    };
+
+                    try {
+                        const publicBookingsRef = collection(db, `artifacts/${appId}/public/data/bookings`);
+                        await addDoc(publicBookingsRef, bookingData);
+
+                        modalTitle.innerText = "Reserva Confirmada!";
+                        modalMessage.innerText = "Sua solicitação de reserva foi recebida com sucesso. Nossa equipe entrará em contato em breve para confirmar os detalhes.";
+                        showModal();
+                        bookingForm.reset();
+                        document.getElementById('booking-title').innerText = 'Reserva Rápida';
+
+                    } catch (error) {
+                        console.error("Erro ao enviar reserva:", error);
+                        modalTitle.innerText = "Ops! Algo deu errado";
+                        modalMessage.innerText = "Não foi possível enviar sua reserva. Tente novamente ou entre em contato conosco.";
+                        showModal();
+                    } finally {
+                        submitBookingBtn.disabled = false;
+                        submitBookingBtn.innerHTML = originalText;
+                    }
+                });
+
+                contactForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+
+                    const originalText = submitContactBtn.innerHTML;
+                    submitContactBtn.disabled = true;
+                    submitContactBtn.innerHTML = `
+                        <span class="relative z-10 flex items-center justify-center">
+                            <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                            Enviando...
+                        </span>
+                    `;
+                    
+                    const contactData = {
+                        name: contactForm.name.value,
+                        email: contactForm.email.value,
+                        message: contactForm.message.value,
+                        timestamp: serverTimestamp(),
+                        type: 'contact'
+                    };
+
+                    try {
+                        const publicContactsRef = collection(db, `artifacts/${appId}/public/data/contacts`);
+                        await addDoc(publicContactsRef, contactData);
+
+                        modalTitle.innerText = "Mensagem Enviada!";
+                        modalMessage.innerText = "Obrigado pelo contato! Recebemos sua mensagem e responderemos o mais breve possível.";
+                        showModal();
+                        contactForm.reset();
+                    } catch (error) {
+                        console.error("Erro ao enviar mensagem:", error);
+                        modalTitle.innerText = "Ops! Algo deu errado";
+                        modalMessage.innerText = "Não foi possível enviar sua mensagem. Tente novamente ou use nossos contatos diretos.";
+                        showModal();
+                    } finally {
+                        submitContactBtn.disabled = false;
+                        submitContactBtn.innerHTML = originalText;
+                    }
+                });
+
+                // Event listeners do modal
+                closeModalBtn.addEventListener('click', hideModal);
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) hideModal();
+                });
+
+                // Listener para carregar reservas em tempo real
+                onAuthStateChanged(auth, user => {
+                    if (user) {
+                        const publicBookingsRef = collection(db, `artifacts/${appId}/public/data/bookings`);
+                        loadingIndicatorBooking.classList.remove('hidden');
+                        noBookingsMessage.style.display = 'none';
+
+                        onSnapshot(publicBookingsRef, (querySnapshot) => {
+                            const bookings = [];
+                            querySnapshot.forEach((doc) => {
+                                bookings.push({ id: doc.id, ...doc.data() });
+                            });
+
+                            bookings.sort((a, b) => {
+                                if (!a.timestamp) return 1;
+                                if (!b.timestamp) return -1;
+                                return b.timestamp.seconds - a.timestamp.seconds;
+                            });
+
+                            loadingIndicatorBooking.classList.add('hidden');
+                            
+                            // Remove apenas os cards de reserva, mantém a mensagem "Nenhuma reserva"
+                            document.querySelectorAll('#bookings-list .booking-item').forEach(el => el.remove());
+                            if (bookings.length > 0) {
+                                noBookingsMessage.style.display = 'none';
+                                bookings.forEach((booking, index) => {
+                                    const card = createBookingCard(booking);
+                                    card.style.animationDelay = `${index * 0.1}s`;
+                                    bookingsList.appendChild(card);
+                                });
+                            } else {
+                                noBookingsMessage.style.display = 'block';
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html> -->
