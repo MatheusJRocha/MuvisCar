@@ -163,6 +163,7 @@ async def not_found_handler(request: Request, exc):
                 "GET /clientes",
                 "POST /clientes",
                 "POST /login",
+                "POST /rental/upload-cnh",
                 "POST /logout",
                 "GET /clientes/{client_id}",
                 "PUT /clientes/{client_id}",
